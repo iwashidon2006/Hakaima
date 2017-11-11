@@ -191,6 +191,31 @@ public class ResourceManager : MonoBehaviour
 
 	private void Awake ()
 	{
+		spriteTerrainList = new Dictionary<int, Sprite> ();
+		spriteObstacleList = new Dictionary<int, Sprite> ();
+		spriteHoleList = new Dictionary<int, Sprite> ();
+		spritePlayerList = new Dictionary<int, Sprite> ();
+		spriteEnemyList = new Dictionary<int, Sprite> ();
+		spriteItemList = new Dictionary<int, Sprite> ();
+		spriteBonusList = new Dictionary<int, Sprite> ();
+	}
+
+
+	public void SetClear ()
+	{
+		spriteTerrainList.Clear ();
+		spriteObstacleList.Clear ();
+		spriteHoleList.Clear ();
+		spritePlayerList.Clear ();
+		spriteEnemyList.Clear ();
+		spriteItemList.Clear ();
+		spriteBonusList.Clear ();
+	}
+
+
+
+	public void SetTerrian ()
+	{
 		spriteTerrainList = new Dictionary<int, Sprite> (){
 			{(int)Hakaima.Terrain.Type.Soil					* SPRITE_MULTI_TYPE + Hakaima.Terrain.IMAGE_0,		spriteTerrainSoil					},
 			{(int)Hakaima.Terrain.Type.Grass				* SPRITE_MULTI_TYPE + Hakaima.Terrain.IMAGE_0,		spriteTerrainGrass					},
@@ -202,7 +227,11 @@ public class ResourceManager : MonoBehaviour
 			{(int)Hakaima.Terrain.Type.BridgeVertical		* SPRITE_MULTI_TYPE + Hakaima.Terrain.IMAGE_0,		spriteTerrainBridgeVertical			},
 			{(int)Hakaima.Terrain.Type.BridgeHorizontal		* SPRITE_MULTI_TYPE + Hakaima.Terrain.IMAGE_0,		spriteTerrainBridgeHorizontal		},
 		};
+	}
 
+
+	public void SetObstacle ()
+	{
 		spriteObstacleList = new Dictionary<int, Sprite> (){
 			{(int)Hakaima.Obstacle.Type.Tree					* SPRITE_MULTI_TYPE + Hakaima.Obstacle.IMAGE_0,		spriteObstacleTree					},
 			{(int)Hakaima.Obstacle.Type.Stone					* SPRITE_MULTI_TYPE + Hakaima.Obstacle.IMAGE_0,		spriteObstacleStone					},
@@ -248,14 +277,50 @@ public class ResourceManager : MonoBehaviour
 			{(int)Hakaima.Obstacle.Type.FallTombPiece			* SPRITE_MULTI_TYPE + Hakaima.Obstacle.IMAGE_1,		spriteObstacleTombPiece1			},
 			{(int)Hakaima.Obstacle.Type.FallTombPieceEnd		* SPRITE_MULTI_TYPE + Hakaima.Obstacle.IMAGE_0,		spriteObstacleTombPieceEnd			},
 		};
+	}
 
+
+
+	public void SetHole ()
+	{
 		spriteHoleList = new Dictionary<int, Sprite> (){
 			{Hakaima.Hole.IMAGE_MIDDLE_1,		spriteHoleMiddle1	},
 			{Hakaima.Hole.IMAGE_MIDDLE_2,		spriteHoleMiddle2	},
 			{Hakaima.Hole.IMAGE_MIDDLE_3,		spriteHoleMiddle3	},
 			{Hakaima.Hole.IMAGE_COMPLETE,		spriteHoleComplete	},
 		};
+	}
 
+
+
+	public void SetItem ()
+	{
+		spriteItemList = new Dictionary<int, Sprite> (){
+			{(int)Item.Type.Sandal		* SPRITE_MULTI_TYPE,			spriteItemSandal	},
+			{(int)Item.Type.Hoe			* SPRITE_MULTI_TYPE,			spriteItemHoe		},
+			{(int)Item.Type.Stone		* SPRITE_MULTI_TYPE,			spriteItemStone		},
+			{(int)Item.Type.Amulet		* SPRITE_MULTI_TYPE,			spriteItemAmulet	},
+			{(int)Item.Type.Parasol		* SPRITE_MULTI_TYPE,			spriteItemParasol	},
+		};
+	}
+		
+
+	public void SetBonus ()
+	{
+		spriteBonusList = new Dictionary<int, Sprite> (){
+			{(int)Bonus.Type.Bonus0		* SPRITE_MULTI_TYPE,			spriteBonus0	},
+			{(int)Bonus.Type.Bonus1		* SPRITE_MULTI_TYPE,			spriteBonus1	},
+			{(int)Bonus.Type.Bonus2		* SPRITE_MULTI_TYPE,			spriteBonus2	},
+			{(int)Bonus.Type.Bonus3		* SPRITE_MULTI_TYPE,			spriteBonus3	},
+			{(int)Bonus.Type.Bonus4		* SPRITE_MULTI_TYPE,			spriteBonus4	},
+			{(int)Bonus.Type.Bonus5		* SPRITE_MULTI_TYPE,			spriteBonus5	},
+			{(int)Bonus.Type.Bonus6		* SPRITE_MULTI_TYPE,			spriteBonus6	},
+		};
+	}
+
+
+	public void SetAllEnemy ()
+	{
 		spriteEnemyList = new Dictionary<int, Sprite> ();
 		SetEnemy (Enemy.Type.Person);
 		SetEnemy (Enemy.Type.Ghost);
@@ -268,24 +333,6 @@ public class ResourceManager : MonoBehaviour
 		SetEnemy (Enemy.Type.Parasol);
 		SetEnemy (Enemy.Type.Kappa);
 		SetEnemy (Enemy.Type.Tengu);
-
-		spriteItemList = new Dictionary<int, Sprite> (){
-			{(int)Item.Type.Sandal		* SPRITE_MULTI_TYPE,			spriteItemSandal	},
-			{(int)Item.Type.Hoe			* SPRITE_MULTI_TYPE,			spriteItemHoe		},
-			{(int)Item.Type.Stone		* SPRITE_MULTI_TYPE,			spriteItemStone		},
-			{(int)Item.Type.Amulet		* SPRITE_MULTI_TYPE,			spriteItemAmulet	},
-			{(int)Item.Type.Parasol		* SPRITE_MULTI_TYPE,			spriteItemParasol	},
-		};
-		
-		spriteBonusList = new Dictionary<int, Sprite> (){
-			{(int)Bonus.Type.Bonus0		* SPRITE_MULTI_TYPE,			spriteBonus0	},
-			{(int)Bonus.Type.Bonus1		* SPRITE_MULTI_TYPE,			spriteBonus1	},
-			{(int)Bonus.Type.Bonus2		* SPRITE_MULTI_TYPE,			spriteBonus2	},
-			{(int)Bonus.Type.Bonus3		* SPRITE_MULTI_TYPE,			spriteBonus3	},
-			{(int)Bonus.Type.Bonus4		* SPRITE_MULTI_TYPE,			spriteBonus4	},
-			{(int)Bonus.Type.Bonus5		* SPRITE_MULTI_TYPE,			spriteBonus5	},
-			{(int)Bonus.Type.Bonus6		* SPRITE_MULTI_TYPE,			spriteBonus6	},
-		};
 	}
 
 
@@ -327,6 +374,9 @@ public class ResourceManager : MonoBehaviour
 
 	public void SetEnemy (Enemy.Type enemyType)
 	{
+		if (spriteEnemyList.ContainsKey ((int)enemyType * SPRITE_MULTI_TYPE + (int)Enemy.Compass.Right * SPRITE_MULTI_COMPASS + Enemy.IMAGE_0))
+			return;
+
 		spriteEnemyList.Add ((int)enemyType * SPRITE_MULTI_TYPE + (int)Enemy.Compass.Right		* SPRITE_MULTI_COMPASS + Enemy.IMAGE_0, Resources.Load<Sprite> (string.Format ("Textures/enemy_{0}_right_0",	enemyType.ToString ().ToLower ())));
 		spriteEnemyList.Add ((int)enemyType * SPRITE_MULTI_TYPE + (int)Enemy.Compass.Right		* SPRITE_MULTI_COMPASS + Enemy.IMAGE_1, Resources.Load<Sprite> (string.Format ("Textures/enemy_{0}_right_1",	enemyType.ToString ().ToLower ())));
 		spriteEnemyList.Add ((int)enemyType * SPRITE_MULTI_TYPE + (int)Enemy.Compass.Right		* SPRITE_MULTI_COMPASS + Enemy.IMAGE_2, Resources.Load<Sprite> (string.Format ("Textures/enemy_{0}_right_2",	enemyType.ToString ().ToLower ())));

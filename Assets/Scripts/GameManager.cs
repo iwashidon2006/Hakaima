@@ -993,6 +993,13 @@ public class GameManager : MonoBehaviour
 			}
 		}
 
+
+		ResourceManager.Instance.SetTerrian ();
+		ResourceManager.Instance.SetObstacle ();
+		ResourceManager.Instance.SetHole ();
+		ResourceManager.Instance.SetItem ();
+		ResourceManager.Instance.SetBonus ();
+		ResourceManager.Instance.SetAllEnemy ();
 		ResourceManager.Instance.SetPlayer (3);
 		transform.Find ("UI/Information/Face").GetComponent<Image>().sprite = ResourceManager.Instance.spriteUpperPlayer;
 	}
