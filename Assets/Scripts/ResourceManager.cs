@@ -126,54 +126,6 @@ public class ResourceManager : MonoBehaviour
 	[HideInInspector]
 	public Dictionary<int, Sprite> spriteHoleList;
 	
-	[SerializeField]
-	private Sprite spritePlayerCompassRight0;
-	[SerializeField]
-	private Sprite spritePlayerCompassRight1;
-	[SerializeField]
-	private Sprite spritePlayerCompassRight2;
-	[SerializeField]
-	private Sprite spritePlayerCompassLeft0;
-	[SerializeField]
-	private Sprite spritePlayerCompassLeft1;
-	[SerializeField]
-	private Sprite spritePlayerCompassLeft2;
-	[SerializeField]
-	private Sprite spritePlayerCompassTop0;
-	[SerializeField]
-	private Sprite spritePlayerCompassTop1;
-	[SerializeField]
-	private Sprite spritePlayerCompassTop2;
-	[SerializeField]
-	private Sprite spritePlayerCompassBottom0;
-	[SerializeField]
-	private Sprite spritePlayerCompassBottom1;
-	[SerializeField]
-	private Sprite spritePlayerCompassBottom2;
-	[SerializeField]
-	private Sprite spritePlayerSpinCompassRight0;
-	[SerializeField]
-	private Sprite spritePlayerSpinCompassRight1;
-	[SerializeField]
-	private Sprite spritePlayerSpinCompassRight2;
-	[SerializeField]
-	private Sprite spritePlayerSpinCompassLeft0;
-	[SerializeField]
-	private Sprite spritePlayerSpinCompassLeft1;
-	[SerializeField]
-	private Sprite spritePlayerSpinCompassLeft2;
-	[SerializeField]
-	private Sprite spritePlayerSpinCompassTop0;
-	[SerializeField]
-	private Sprite spritePlayerSpinCompassTop1;
-	[SerializeField]
-	private Sprite spritePlayerSpinCompassTop2;
-	[SerializeField]
-	private Sprite spritePlayerSpinCompassBottom0;
-	[SerializeField]
-	private Sprite spritePlayerSpinCompassBottom1;
-	[SerializeField]
-	private Sprite spritePlayerSpinCompassBottom2;
 	[HideInInspector]
 	public Dictionary<int, Sprite> spritePlayerList;
 	[HideInInspector]
@@ -567,34 +519,6 @@ public class ResourceManager : MonoBehaviour
 			{Hakaima.Hole.IMAGE_MIDDLE_2,		spriteHoleMiddle2	},
 			{Hakaima.Hole.IMAGE_MIDDLE_3,		spriteHoleMiddle3	},
 			{Hakaima.Hole.IMAGE_COMPLETE,		spriteHoleComplete	},
-		};
-
-		spritePlayerList = new Dictionary<int, Sprite> (){
-			{0					+ (int)Player.Compass.Right		* SPRITE_MULTI_COMPASS + Player.IMAGE_0,	spritePlayerCompassRight0	},
-			{0					+ (int)Player.Compass.Right		* SPRITE_MULTI_COMPASS + Player.IMAGE_1,	spritePlayerCompassRight1	},
-			{0					+ (int)Player.Compass.Right		* SPRITE_MULTI_COMPASS + Player.IMAGE_2,	spritePlayerCompassRight2	},
-			{0					+ (int)Player.Compass.Left		* SPRITE_MULTI_COMPASS + Player.IMAGE_0,	spritePlayerCompassLeft0	},
-			{0					+ (int)Player.Compass.Left		* SPRITE_MULTI_COMPASS + Player.IMAGE_1,	spritePlayerCompassLeft1	},
-			{0					+ (int)Player.Compass.Left		* SPRITE_MULTI_COMPASS + Player.IMAGE_2,	spritePlayerCompassLeft2	},
-			{0					+ (int)Player.Compass.Top		* SPRITE_MULTI_COMPASS + Player.IMAGE_0,	spritePlayerCompassTop0		},
-			{0					+ (int)Player.Compass.Top		* SPRITE_MULTI_COMPASS + Player.IMAGE_1,	spritePlayerCompassTop1		},
-			{0					+ (int)Player.Compass.Top		* SPRITE_MULTI_COMPASS + Player.IMAGE_2,	spritePlayerCompassTop2		},
-			{0					+ (int)Player.Compass.Bottom	* SPRITE_MULTI_COMPASS + Player.IMAGE_0,	spritePlayerCompassBottom0	},
-			{0					+ (int)Player.Compass.Bottom	* SPRITE_MULTI_COMPASS + Player.IMAGE_1,	spritePlayerCompassBottom1	},
-			{0					+ (int)Player.Compass.Bottom	* SPRITE_MULTI_COMPASS + Player.IMAGE_2,	spritePlayerCompassBottom2	},
-
-			{SPRITE_MULTI_TYPE	+ (int)Player.Compass.Right		* SPRITE_MULTI_COMPASS + Player.IMAGE_0,	spritePlayerSpinCompassRight0	},
-			{SPRITE_MULTI_TYPE	+ (int)Player.Compass.Right		* SPRITE_MULTI_COMPASS + Player.IMAGE_1,	spritePlayerSpinCompassRight1	},
-			{SPRITE_MULTI_TYPE	+ (int)Player.Compass.Right		* SPRITE_MULTI_COMPASS + Player.IMAGE_2,	spritePlayerSpinCompassRight2	},
-			{SPRITE_MULTI_TYPE	+ (int)Player.Compass.Left		* SPRITE_MULTI_COMPASS + Player.IMAGE_0,	spritePlayerSpinCompassLeft0	},
-			{SPRITE_MULTI_TYPE	+ (int)Player.Compass.Left		* SPRITE_MULTI_COMPASS + Player.IMAGE_1,	spritePlayerSpinCompassLeft1	},
-			{SPRITE_MULTI_TYPE	+ (int)Player.Compass.Left		* SPRITE_MULTI_COMPASS + Player.IMAGE_2,	spritePlayerSpinCompassLeft2	},
-			{SPRITE_MULTI_TYPE	+ (int)Player.Compass.Top		* SPRITE_MULTI_COMPASS + Player.IMAGE_0,	spritePlayerSpinCompassTop0		},
-			{SPRITE_MULTI_TYPE	+ (int)Player.Compass.Top		* SPRITE_MULTI_COMPASS + Player.IMAGE_1,	spritePlayerSpinCompassTop1		},
-			{SPRITE_MULTI_TYPE	+ (int)Player.Compass.Top		* SPRITE_MULTI_COMPASS + Player.IMAGE_2,	spritePlayerSpinCompassTop2		},
-			{SPRITE_MULTI_TYPE	+ (int)Player.Compass.Bottom	* SPRITE_MULTI_COMPASS + Player.IMAGE_0,	spritePlayerSpinCompassBottom0	},
-			{SPRITE_MULTI_TYPE	+ (int)Player.Compass.Bottom	* SPRITE_MULTI_COMPASS + Player.IMAGE_1,	spritePlayerSpinCompassBottom1	},
-			{SPRITE_MULTI_TYPE	+ (int)Player.Compass.Bottom	* SPRITE_MULTI_COMPASS + Player.IMAGE_2,	spritePlayerSpinCompassBottom2	},
 		};
 
 		spriteEnemyList = new Dictionary<int, Sprite> (){
