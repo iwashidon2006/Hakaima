@@ -994,6 +994,7 @@ public class GameManager : MonoBehaviour
 		}
 
 		ResourceManager.Instance.SetPlayer (3);
+		transform.Find ("UI/Information/Face").GetComponent<Image>().sprite = ResourceManager.Instance.spriteUpperPlayer;
 	}
 
 

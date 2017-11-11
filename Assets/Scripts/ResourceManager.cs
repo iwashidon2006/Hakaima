@@ -176,6 +176,8 @@ public class ResourceManager : MonoBehaviour
 	private Sprite spritePlayerSpinCompassBottom2;
 	[HideInInspector]
 	public Dictionary<int, Sprite> spritePlayerList;
+	[HideInInspector]
+	public Sprite spriteUpperPlayer;
 
 	[SerializeField]
 	private Sprite spriteEnemyPersonCompassRight0;
@@ -779,6 +781,8 @@ public class ResourceManager : MonoBehaviour
 			{SPRITE_MULTI_TYPE	+ (int)Player.Compass.Bottom	* SPRITE_MULTI_COMPASS + Player.IMAGE_1,	Resources.Load<Sprite> (string.Format ("Textures/player{0}_spin_bottom_0",	charaId))	},
 			{SPRITE_MULTI_TYPE	+ (int)Player.Compass.Bottom	* SPRITE_MULTI_COMPASS + Player.IMAGE_2,	Resources.Load<Sprite> (string.Format ("Textures/player{0}_spin_bottom_0",	charaId))	},
 		};
+
+		spriteUpperPlayer = Resources.Load<Sprite> (string.Format ("Textures/upper_player{0}",	charaId));
 	}
 	
 }
