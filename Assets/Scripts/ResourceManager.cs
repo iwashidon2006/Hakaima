@@ -521,140 +521,18 @@ public class ResourceManager : MonoBehaviour
 			{Hakaima.Hole.IMAGE_COMPLETE,		spriteHoleComplete	},
 		};
 
-		spriteEnemyList = new Dictionary<int, Sprite> (){
-			{(int)Enemy.Type.Person		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Right	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_0,		spriteEnemyPersonCompassRight0		},
-			{(int)Enemy.Type.Person		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Right	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_1,		spriteEnemyPersonCompassRight1		},
-			{(int)Enemy.Type.Person		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Right	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_2,		spriteEnemyPersonCompassRight2		},
-			{(int)Enemy.Type.Person		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Left	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_0,		spriteEnemyPersonCompassLeft0		},
-			{(int)Enemy.Type.Person		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Left	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_1,		spriteEnemyPersonCompassLeft1		},
-			{(int)Enemy.Type.Person		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Left	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_2,		spriteEnemyPersonCompassLeft2		},
-			{(int)Enemy.Type.Person		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Top	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_0,		spriteEnemyPersonCompassTop0		},
-			{(int)Enemy.Type.Person		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Top	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_1,		spriteEnemyPersonCompassTop1		},
-			{(int)Enemy.Type.Person		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Top	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_2,		spriteEnemyPersonCompassTop2		},
-			{(int)Enemy.Type.Person		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Bottom	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_0,		spriteEnemyPersonCompassBottom0		},
-			{(int)Enemy.Type.Person		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Bottom	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_1,		spriteEnemyPersonCompassBottom1		},
-			{(int)Enemy.Type.Person		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Bottom	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_2,		spriteEnemyPersonCompassBottom2		},
-			{(int)Enemy.Type.Ghost		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Right	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_0,		spriteEnemyGhostCompassRight0		},
-			{(int)Enemy.Type.Ghost		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Right	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_1,		spriteEnemyGhostCompassRight1		},
-			{(int)Enemy.Type.Ghost		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Right	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_2,		spriteEnemyGhostCompassRight2		},
-			{(int)Enemy.Type.Ghost		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Left	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_0,		spriteEnemyGhostCompassLeft0		},
-			{(int)Enemy.Type.Ghost		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Left	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_1,		spriteEnemyGhostCompassLeft1		},
-			{(int)Enemy.Type.Ghost		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Left	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_2,		spriteEnemyGhostCompassLeft2		},
-			{(int)Enemy.Type.Ghost		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Top	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_0,		spriteEnemyGhostCompassTop0			},
-			{(int)Enemy.Type.Ghost		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Top	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_1,		spriteEnemyGhostCompassTop1			},
-			{(int)Enemy.Type.Ghost		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Top	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_2,		spriteEnemyGhostCompassTop2			},
-			{(int)Enemy.Type.Ghost		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Bottom	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_0,		spriteEnemyGhostCompassBottom0		},
-			{(int)Enemy.Type.Ghost		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Bottom	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_1,		spriteEnemyGhostCompassBottom1		},
-			{(int)Enemy.Type.Ghost		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Bottom	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_2,		spriteEnemyGhostCompassBottom2		},
-			{(int)Enemy.Type.Soul		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Right	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_0,		spriteEnemySoulCompassRight0		},
-			{(int)Enemy.Type.Soul		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Right	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_1,		spriteEnemySoulCompassRight1		},
-			{(int)Enemy.Type.Soul		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Right	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_2,		spriteEnemySoulCompassRight2		},
-			{(int)Enemy.Type.Soul		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Left	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_0,		spriteEnemySoulCompassLeft0			},
-			{(int)Enemy.Type.Soul		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Left	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_1,		spriteEnemySoulCompassLeft1			},
-			{(int)Enemy.Type.Soul		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Left	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_2,		spriteEnemySoulCompassLeft2			},
-			{(int)Enemy.Type.Soul		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Top	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_0,		spriteEnemySoulCompassTop0			},
-			{(int)Enemy.Type.Soul		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Top	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_1,		spriteEnemySoulCompassTop1			},
-			{(int)Enemy.Type.Soul		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Top	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_2,		spriteEnemySoulCompassTop2			},
-			{(int)Enemy.Type.Soul		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Bottom	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_0,		spriteEnemySoulCompassBottom0		},
-			{(int)Enemy.Type.Soul		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Bottom	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_1,		spriteEnemySoulCompassBottom1		},
-			{(int)Enemy.Type.Soul		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Bottom	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_2,		spriteEnemySoulCompassBottom2		},
-			{(int)Enemy.Type.Skeleton	* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Right	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_0,		spriteEnemySkeletonCompassRight0	},
-			{(int)Enemy.Type.Skeleton	* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Right	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_1,		spriteEnemySkeletonCompassRight1	},
-			{(int)Enemy.Type.Skeleton	* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Right	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_2,		spriteEnemySkeletonCompassRight2	},
-			{(int)Enemy.Type.Skeleton	* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Left	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_0,		spriteEnemySkeletonCompassLeft0		},
-			{(int)Enemy.Type.Skeleton	* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Left	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_1,		spriteEnemySkeletonCompassLeft1		},
-			{(int)Enemy.Type.Skeleton	* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Left	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_2,		spriteEnemySkeletonCompassLeft2		},
-			{(int)Enemy.Type.Skeleton	* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Top	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_0,		spriteEnemySkeletonCompassTop0		},
-			{(int)Enemy.Type.Skeleton	* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Top	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_1,		spriteEnemySkeletonCompassTop1		},
-			{(int)Enemy.Type.Skeleton	* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Top	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_2,		spriteEnemySkeletonCompassTop2		},
-			{(int)Enemy.Type.Skeleton	* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Bottom	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_0,		spriteEnemySkeletonCompassBottom0	},
-			{(int)Enemy.Type.Skeleton	* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Bottom	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_1,		spriteEnemySkeletonCompassBottom1	},
-			{(int)Enemy.Type.Skeleton	* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Bottom	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_2,		spriteEnemySkeletonCompassBottom2	},
-			{(int)Enemy.Type.Mummy		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Right	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_0,		spriteEnemyMummyCompassRight0		},
-			{(int)Enemy.Type.Mummy		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Right	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_1,		spriteEnemyMummyCompassRight1		},
-			{(int)Enemy.Type.Mummy		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Right	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_2,		spriteEnemyMummyCompassRight2		},
-			{(int)Enemy.Type.Mummy		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Left	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_0,		spriteEnemyMummyCompassLeft0		},
-			{(int)Enemy.Type.Mummy		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Left	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_1,		spriteEnemyMummyCompassLeft1		},
-			{(int)Enemy.Type.Mummy		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Left	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_2,		spriteEnemyMummyCompassLeft2		},
-			{(int)Enemy.Type.Mummy		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Top	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_0,		spriteEnemyMummyCompassTop0			},
-			{(int)Enemy.Type.Mummy		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Top	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_1,		spriteEnemyMummyCompassTop1			},
-			{(int)Enemy.Type.Mummy		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Top	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_2,		spriteEnemyMummyCompassTop2			},
-			{(int)Enemy.Type.Mummy		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Bottom	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_0,		spriteEnemyMummyCompassBottom0		},
-			{(int)Enemy.Type.Mummy		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Bottom	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_1,		spriteEnemyMummyCompassBottom1		},
-			{(int)Enemy.Type.Mummy		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Bottom	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_2,		spriteEnemyMummyCompassBottom2		},
-			{(int)Enemy.Type.Shadowman	* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Right	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_0,		spriteEnemyShadowmanCompassRight0	},
-			{(int)Enemy.Type.Shadowman	* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Right	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_1,		spriteEnemyShadowmanCompassRight1	},
-			{(int)Enemy.Type.Shadowman	* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Right	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_2,		spriteEnemyShadowmanCompassRight2	},
-			{(int)Enemy.Type.Shadowman	* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Left	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_0,		spriteEnemyShadowmanCompassLeft0	},
-			{(int)Enemy.Type.Shadowman	* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Left	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_1,		spriteEnemyShadowmanCompassLeft1	},
-			{(int)Enemy.Type.Shadowman	* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Left	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_2,		spriteEnemyShadowmanCompassLeft2	},
-			{(int)Enemy.Type.Shadowman	* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Top	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_0,		spriteEnemyShadowmanCompassTop0		},
-			{(int)Enemy.Type.Shadowman	* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Top	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_1,		spriteEnemyShadowmanCompassTop1		},
-			{(int)Enemy.Type.Shadowman	* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Top	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_2,		spriteEnemyShadowmanCompassTop2		},
-			{(int)Enemy.Type.Shadowman	* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Bottom	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_0,		spriteEnemyShadowmanCompassBottom0	},
-			{(int)Enemy.Type.Shadowman	* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Bottom	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_1,		spriteEnemyShadowmanCompassBottom1	},
-			{(int)Enemy.Type.Shadowman	* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Bottom	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_2,		spriteEnemyShadowmanCompassBottom2	},
-			{(int)Enemy.Type.Golem		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Right	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_0,		spriteEnemyGolemCompassRight0		},
-			{(int)Enemy.Type.Golem		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Right	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_1,		spriteEnemyGolemCompassRight1		},
-			{(int)Enemy.Type.Golem		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Right	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_2,		spriteEnemyGolemCompassRight2		},
-			{(int)Enemy.Type.Golem		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Left	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_0,		spriteEnemyGolemCompassLeft0		},
-			{(int)Enemy.Type.Golem		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Left	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_1,		spriteEnemyGolemCompassLeft1		},
-			{(int)Enemy.Type.Golem		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Left	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_2,		spriteEnemyGolemCompassLeft2		},
-			{(int)Enemy.Type.Golem		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Top	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_0,		spriteEnemyGolemCompassTop0			},
-			{(int)Enemy.Type.Golem		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Top	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_1,		spriteEnemyGolemCompassTop1			},
-			{(int)Enemy.Type.Golem		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Top	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_2,		spriteEnemyGolemCompassTop2			},
-			{(int)Enemy.Type.Golem		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Bottom	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_0,		spriteEnemyGolemCompassBottom0		},
-			{(int)Enemy.Type.Golem		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Bottom	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_1,		spriteEnemyGolemCompassBottom1		},
-			{(int)Enemy.Type.Golem		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Bottom	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_2,		spriteEnemyGolemCompassBottom2		},
-			{(int)Enemy.Type.Goblin		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Right	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_0,		spriteEnemyGoblinCompassRight0		},
-			{(int)Enemy.Type.Goblin		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Right	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_1,		spriteEnemyGoblinCompassRight1		},
-			{(int)Enemy.Type.Goblin		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Right	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_2,		spriteEnemyGoblinCompassRight2		},
-			{(int)Enemy.Type.Goblin		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Left	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_0,		spriteEnemyGoblinCompassLeft0		},
-			{(int)Enemy.Type.Goblin		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Left	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_1,		spriteEnemyGoblinCompassLeft1		},
-			{(int)Enemy.Type.Goblin		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Left	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_2,		spriteEnemyGoblinCompassLeft2		},
-			{(int)Enemy.Type.Goblin		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Top	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_0,		spriteEnemyGoblinCompassTop0		},
-			{(int)Enemy.Type.Goblin		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Top	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_1,		spriteEnemyGoblinCompassTop1		},
-			{(int)Enemy.Type.Goblin		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Top	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_2,		spriteEnemyGoblinCompassTop2		},
-			{(int)Enemy.Type.Goblin		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Bottom	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_0,		spriteEnemyGoblinCompassBottom0		},
-			{(int)Enemy.Type.Goblin		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Bottom	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_1,		spriteEnemyGoblinCompassBottom1		},
-			{(int)Enemy.Type.Goblin		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Bottom	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_2,		spriteEnemyGoblinCompassBottom2		},
-			{(int)Enemy.Type.Parasol	* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Right	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_0,		spriteEnemyParasolCompassRight0		},
-			{(int)Enemy.Type.Parasol	* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Right	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_1,		spriteEnemyParasolCompassRight1		},
-			{(int)Enemy.Type.Parasol	* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Right	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_2,		spriteEnemyParasolCompassRight2		},
-			{(int)Enemy.Type.Parasol	* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Left	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_0,		spriteEnemyParasolCompassLeft0		},
-			{(int)Enemy.Type.Parasol	* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Left	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_1,		spriteEnemyParasolCompassLeft1		},
-			{(int)Enemy.Type.Parasol	* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Left	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_2,		spriteEnemyParasolCompassLeft2		},
-			{(int)Enemy.Type.Parasol	* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Top	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_0,		spriteEnemyParasolCompassTop0		},
-			{(int)Enemy.Type.Parasol	* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Top	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_1,		spriteEnemyParasolCompassTop1		},
-			{(int)Enemy.Type.Parasol	* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Top	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_2,		spriteEnemyParasolCompassTop2		},
-			{(int)Enemy.Type.Parasol	* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Bottom	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_0,		spriteEnemyParasolCompassBottom0	},
-			{(int)Enemy.Type.Parasol	* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Bottom	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_1,		spriteEnemyParasolCompassBottom1	},
-			{(int)Enemy.Type.Parasol	* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Bottom	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_2,		spriteEnemyParasolCompassBottom2	},
-			{(int)Enemy.Type.Kappa		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Right	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_0,		spriteEnemyKappaCompassRight0		},
-			{(int)Enemy.Type.Kappa		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Right	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_1,		spriteEnemyKappaCompassRight1		},
-			{(int)Enemy.Type.Kappa		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Right	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_2,		spriteEnemyKappaCompassRight2		},
-			{(int)Enemy.Type.Kappa		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Left	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_0,		spriteEnemyKappaCompassLeft0		},
-			{(int)Enemy.Type.Kappa		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Left	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_1,		spriteEnemyKappaCompassLeft1		},
-			{(int)Enemy.Type.Kappa		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Left	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_2,		spriteEnemyKappaCompassLeft2		},
-			{(int)Enemy.Type.Kappa		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Top	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_0,		spriteEnemyKappaCompassTop0			},
-			{(int)Enemy.Type.Kappa		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Top	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_1,		spriteEnemyKappaCompassTop1			},
-			{(int)Enemy.Type.Kappa		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Top	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_2,		spriteEnemyKappaCompassTop2			},
-			{(int)Enemy.Type.Kappa		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Bottom	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_0,		spriteEnemyKappaCompassBottom0		},
-			{(int)Enemy.Type.Kappa		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Bottom	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_1,		spriteEnemyKappaCompassBottom1		},
-			{(int)Enemy.Type.Kappa		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Bottom	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_2,		spriteEnemyKappaCompassBottom2		},
-			{(int)Enemy.Type.Tengu		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Right	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_0,		spriteEnemyTenguCompassRight0		},
-			{(int)Enemy.Type.Tengu		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Right	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_1,		spriteEnemyTenguCompassRight1		},
-			{(int)Enemy.Type.Tengu		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Right	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_2,		spriteEnemyTenguCompassRight2		},
-			{(int)Enemy.Type.Tengu		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Left	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_0,		spriteEnemyTenguCompassLeft0		},
-			{(int)Enemy.Type.Tengu		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Left	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_1,		spriteEnemyTenguCompassLeft1		},
-			{(int)Enemy.Type.Tengu		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Left	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_2,		spriteEnemyTenguCompassLeft2		},
-			{(int)Enemy.Type.Tengu		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Top	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_0,		spriteEnemyTenguCompassTop0			},
-			{(int)Enemy.Type.Tengu		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Top	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_1,		spriteEnemyTenguCompassTop1			},
-			{(int)Enemy.Type.Tengu		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Top	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_2,		spriteEnemyTenguCompassTop2			},
-			{(int)Enemy.Type.Tengu		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Bottom	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_0,		spriteEnemyTenguCompassBottom0		},
-			{(int)Enemy.Type.Tengu		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Bottom	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_1,		spriteEnemyTenguCompassBottom1		},
-			{(int)Enemy.Type.Tengu		* SPRITE_MULTI_TYPE + (int)Enemy.Compass.Bottom	* SPRITE_MULTI_COMPASS + Enemy.IMAGE_2,		spriteEnemyTenguCompassBottom2		},
-		};
+		spriteEnemyList = new Dictionary<int, Sprite> ();
+		SetEnemy (Enemy.Type.Person);
+		SetEnemy (Enemy.Type.Ghost);
+		SetEnemy (Enemy.Type.Soul);
+		SetEnemy (Enemy.Type.Skeleton);
+		SetEnemy (Enemy.Type.Mummy);
+		SetEnemy (Enemy.Type.Shadowman);
+		SetEnemy (Enemy.Type.Golem);
+		SetEnemy (Enemy.Type.Goblin);
+		SetEnemy (Enemy.Type.Parasol);
+		SetEnemy (Enemy.Type.Kappa);
+		SetEnemy (Enemy.Type.Tengu);
 
 		spriteItemList = new Dictionary<int, Sprite> (){
 			{(int)Item.Type.Sandal		* SPRITE_MULTI_TYPE,			spriteItemSandal	},
@@ -674,6 +552,7 @@ public class ResourceManager : MonoBehaviour
 			{(int)Bonus.Type.Bonus6		* SPRITE_MULTI_TYPE,			spriteBonus6	},
 		};
 	}
+
 
 
 	public void SetPlayer (int charaId)
@@ -707,6 +586,24 @@ public class ResourceManager : MonoBehaviour
 		};
 
 		spriteUpperPlayer = Resources.Load<Sprite> (string.Format ("Textures/upper_player{0}",	charaId));
+	}
+
+
+
+	public void SetEnemy (Enemy.Type enemyType)
+	{
+		spriteEnemyList.Add ((int)enemyType * SPRITE_MULTI_TYPE + (int)Enemy.Compass.Right		* SPRITE_MULTI_COMPASS + Enemy.IMAGE_0, Resources.Load<Sprite> (string.Format ("Textures/enemy_{0}_right_0",	enemyType.ToString ().ToLower ())));
+		spriteEnemyList.Add ((int)enemyType * SPRITE_MULTI_TYPE + (int)Enemy.Compass.Right		* SPRITE_MULTI_COMPASS + Enemy.IMAGE_1, Resources.Load<Sprite> (string.Format ("Textures/enemy_{0}_right_1",	enemyType.ToString ().ToLower ())));
+		spriteEnemyList.Add ((int)enemyType * SPRITE_MULTI_TYPE + (int)Enemy.Compass.Right		* SPRITE_MULTI_COMPASS + Enemy.IMAGE_2, Resources.Load<Sprite> (string.Format ("Textures/enemy_{0}_right_2",	enemyType.ToString ().ToLower ())));
+		spriteEnemyList.Add ((int)enemyType * SPRITE_MULTI_TYPE + (int)Enemy.Compass.Left		* SPRITE_MULTI_COMPASS + Enemy.IMAGE_0, Resources.Load<Sprite> (string.Format ("Textures/enemy_{0}_left_0",		enemyType.ToString ().ToLower ())));
+		spriteEnemyList.Add ((int)enemyType * SPRITE_MULTI_TYPE + (int)Enemy.Compass.Left		* SPRITE_MULTI_COMPASS + Enemy.IMAGE_1, Resources.Load<Sprite> (string.Format ("Textures/enemy_{0}_left_1",		enemyType.ToString ().ToLower ())));
+		spriteEnemyList.Add ((int)enemyType * SPRITE_MULTI_TYPE + (int)Enemy.Compass.Left		* SPRITE_MULTI_COMPASS + Enemy.IMAGE_2, Resources.Load<Sprite> (string.Format ("Textures/enemy_{0}_left_2",		enemyType.ToString ().ToLower ())));
+		spriteEnemyList.Add ((int)enemyType * SPRITE_MULTI_TYPE + (int)Enemy.Compass.Top		* SPRITE_MULTI_COMPASS + Enemy.IMAGE_0, Resources.Load<Sprite> (string.Format ("Textures/enemy_{0}_top_0",		enemyType.ToString ().ToLower ())));
+		spriteEnemyList.Add ((int)enemyType * SPRITE_MULTI_TYPE + (int)Enemy.Compass.Top		* SPRITE_MULTI_COMPASS + Enemy.IMAGE_1, Resources.Load<Sprite> (string.Format ("Textures/enemy_{0}_top_1",		enemyType.ToString ().ToLower ())));
+		spriteEnemyList.Add ((int)enemyType * SPRITE_MULTI_TYPE + (int)Enemy.Compass.Top		* SPRITE_MULTI_COMPASS + Enemy.IMAGE_2, Resources.Load<Sprite> (string.Format ("Textures/enemy_{0}_top_2",		enemyType.ToString ().ToLower ())));
+		spriteEnemyList.Add ((int)enemyType * SPRITE_MULTI_TYPE + (int)Enemy.Compass.Bottom		* SPRITE_MULTI_COMPASS + Enemy.IMAGE_0, Resources.Load<Sprite> (string.Format ("Textures/enemy_{0}_bottom_0",	enemyType.ToString ().ToLower ())));
+		spriteEnemyList.Add ((int)enemyType * SPRITE_MULTI_TYPE + (int)Enemy.Compass.Bottom		* SPRITE_MULTI_COMPASS + Enemy.IMAGE_1, Resources.Load<Sprite> (string.Format ("Textures/enemy_{0}_bottom_1",	enemyType.ToString ().ToLower ())));
+		spriteEnemyList.Add ((int)enemyType * SPRITE_MULTI_TYPE + (int)Enemy.Compass.Bottom		* SPRITE_MULTI_COMPASS + Enemy.IMAGE_2, Resources.Load<Sprite> (string.Format ("Textures/enemy_{0}_bottom_2",	enemyType.ToString ().ToLower ())));
 	}
 	
 }
