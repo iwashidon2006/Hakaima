@@ -250,22 +250,7 @@ public class StoryManager : MonoBehaviour
 
 	private bool isPause;
 
-
-
-	[SerializeField]
-	private Sprite spritePlayerCompassRight0;
-	[SerializeField]
-	private Sprite spritePlayerCompassRight1;
-	[SerializeField]
-	private Sprite spritePlayerCompassRight2;
-	[SerializeField]
-	private Sprite spritePlayerCompassLeft0;
-	[SerializeField]
-	private Sprite spritePlayerCompassLeft1;
-	[SerializeField]
-	private Sprite spritePlayerCompassLeft2;
-	[HideInInspector]
-	public Dictionary<int, Sprite> spritePlayerList;
+	private Dictionary<int, Sprite> spritePlayerList;
 	
 	[SerializeField]
 	private Sprite spriteBossCompassRight0;
@@ -343,14 +328,7 @@ public class StoryManager : MonoBehaviour
 		goPlayerNotice.SetActive (false);
 		goBossNotice.SetActive (false);
 
-		spritePlayerList = new Dictionary<int, Sprite> (){
-			{(int)StoryPerson.Compass.Right	* ResourceManager.SPRITE_MULTI_COMPASS + StoryPerson.IMAGE_0,	spritePlayerCompassRight0	},
-			{(int)StoryPerson.Compass.Right	* ResourceManager.SPRITE_MULTI_COMPASS + StoryPerson.IMAGE_1,	spritePlayerCompassRight1	},
-			{(int)StoryPerson.Compass.Right	* ResourceManager.SPRITE_MULTI_COMPASS + StoryPerson.IMAGE_2,	spritePlayerCompassRight2	},
-			{(int)StoryPerson.Compass.Left	* ResourceManager.SPRITE_MULTI_COMPASS + StoryPerson.IMAGE_0,	spritePlayerCompassLeft0	},
-			{(int)StoryPerson.Compass.Left	* ResourceManager.SPRITE_MULTI_COMPASS + StoryPerson.IMAGE_1,	spritePlayerCompassLeft1	},
-			{(int)StoryPerson.Compass.Left	* ResourceManager.SPRITE_MULTI_COMPASS + StoryPerson.IMAGE_2,	spritePlayerCompassLeft2	},
-		};
+		SetPlayer (3);
 
 		spriteBossList = new Dictionary<int, Sprite> (){
 			{(int)StoryPerson.Compass.Right	* ResourceManager.SPRITE_MULTI_COMPASS + StoryPerson.IMAGE_0,	spriteBossCompassRight0	},
@@ -717,6 +695,20 @@ public class StoryManager : MonoBehaviour
 			}
 		}
 		SoundManager.Instance.PlaySe (SoundManager.SeName.SE_OK);
+	}
+
+
+
+	public void SetPlayer (int charaId)
+	{
+		spritePlayerList = new Dictionary<int, Sprite> (){
+			{0					+ (int)Player.Compass.Right		* ResourceManager.SPRITE_MULTI_COMPASS + Player.IMAGE_0,	Resources.Load<Sprite> (string.Format ("Textures/player{0}_right_0",	charaId))},
+			{0					+ (int)Player.Compass.Right		* ResourceManager.SPRITE_MULTI_COMPASS + Player.IMAGE_1,	Resources.Load<Sprite> (string.Format ("Textures/player{0}_right_1",	charaId))},
+			{0					+ (int)Player.Compass.Right		* ResourceManager.SPRITE_MULTI_COMPASS + Player.IMAGE_2,	Resources.Load<Sprite> (string.Format ("Textures/player{0}_right_2",	charaId))},
+			{0					+ (int)Player.Compass.Left		* ResourceManager.SPRITE_MULTI_COMPASS + Player.IMAGE_0,	Resources.Load<Sprite> (string.Format ("Textures/player{0}_left_0",		charaId))},
+			{0					+ (int)Player.Compass.Left		* ResourceManager.SPRITE_MULTI_COMPASS + Player.IMAGE_1,	Resources.Load<Sprite> (string.Format ("Textures/player{0}_left_1",		charaId))},
+			{0					+ (int)Player.Compass.Left		* ResourceManager.SPRITE_MULTI_COMPASS + Player.IMAGE_2,	Resources.Load<Sprite> (string.Format ("Textures/player{0}_left_2",		charaId))},
+		};
 	}
 
 }
