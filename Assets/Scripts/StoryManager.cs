@@ -328,7 +328,7 @@ public class StoryManager : MonoBehaviour
 		goPlayerNotice.SetActive (false);
 		goBossNotice.SetActive (false);
 
-		SetPlayer (3);
+		SetPlayer (MainManager.Instance.selectCharacter);
 
 		spriteBossList = new Dictionary<int, Sprite> (){
 			{(int)StoryPerson.Compass.Right	* ResourceManager.SPRITE_MULTI_COMPASS + StoryPerson.IMAGE_0,	spriteBossCompassRight0	},
