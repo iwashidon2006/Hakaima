@@ -45,6 +45,8 @@ public class SoundManager : MonoBehaviour
 		public const string SE_SLIP				= "se_slip";
 		public const string SE_BREAK			= "se_break";
 		public const string SE_CHANGE			= "se_change";
+		public const string SE_GACHA			= "se_gacha";
+		public const string SE_RESULT			= "se_result";
 
 		public const string JINGLE_TITLE		= "jin_title";
 		public const string JINGLE_START		= "jin_start";

@@ -185,6 +185,18 @@ public class Data
 	public const string LOGIN_NAME						= "login_name";
 	public const string LOGIN_PASSWORD					= "login_password";
 
+	public const int CHARACTER_MAX						= 6;
+	public const int CHARACTER_SAMURAI					= 0;
+	public const int CHARACTER_KUNOICHI					= 1;
+	public const int CHARACTER_MIKO						= 2;
+	public const int CHARACTER_NINJA					= 3;
+	public const int CHARACTER_MATIMUSUME				= 4;
+	public const int CHARACTER_KENSHI					= 5;
+
+	public const string RECORD_CHARACTER				= "recordCharacter";
+	public const string RECORD_CHARACTER_SELECT			= "recordCharacterSelect";
+	public const string RECORD_GACHATICKET				= "recordGachaTicket";
+
 
 	#if UNITY_ANDROID
 	public const string BANNER_ID = "ca-app-pub-5046886791626891/4433384200";

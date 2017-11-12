@@ -2,7 +2,6 @@
 using UnityEngine.UI;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
-using UnityEngine.Advertisements;
 using UnityEngine.Analytics;
 using System.Collections;
 using System.Collections.Generic;
@@ -993,14 +992,13 @@ public class GameManager : MonoBehaviour
 			}
 		}
 
-
 		ResourceManager.Instance.SetTerrian ();
 		ResourceManager.Instance.SetObstacle ();
 		ResourceManager.Instance.SetHole ();
 		ResourceManager.Instance.SetItem ();
 		ResourceManager.Instance.SetBonus ();
 		ResourceManager.Instance.SetAllEnemy ();
-		ResourceManager.Instance.SetPlayer (3);
+		ResourceManager.Instance.SetPlayer (MainManager.Instance.selectCharacter);
 		transform.Find ("UI/Information/Face").GetComponent<Image>().sprite = ResourceManager.Instance.spriteUpperPlayer;
 	}
 

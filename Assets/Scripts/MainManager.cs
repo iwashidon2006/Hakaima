@@ -138,7 +138,12 @@ public class MainManager : MonoBehaviour
 	[HideInInspector]
 	public bool isDebug;
 
-
+	[HideInInspector]
+	public int gachaTicket;
+	[HideInInspector]
+	public int[] character;
+	[HideInInspector]
+	public int selectCharacter;
 
 	private void Start ()
 	{
@@ -172,6 +177,12 @@ public class MainManager : MonoBehaviour
 
 		this.isLogin = false;
 		loginInfo = new LoginInformation();
+
+		this.InitCharacter ();
+		this.LoadCharacter ();
+
+		// For Debug.
+		gachaTicket = 10;
 	}
 
 
@@ -436,7 +447,76 @@ public class MainManager : MonoBehaviour
 		}
 	}
 
+	private void InitCharacter()
+	{
+		character = new int[Data.CHARACTER_MAX];
+		character [0] = 1;	// 侍は取得済み扱い.
+	}
 
+	public void GetCharacter(int number)
+	{
+		if (number >= Data.CHARACTER_MAX)
+			return;
+		
+		character [number] = 1;
+	}
+
+	public bool IsCharacter(int number)
+	{
+		return character [number] >= 1;
+	}
+
+	public void SetCharacter(int number)
+	{
+		if (number >= Data.CHARACTER_MAX)
+			return;
+
+		selectCharacter = number;
+	}
+
+	public void SaveCharacter()
+	{
+		int record = 1;
+
+		if (IsCharacter (1)) {
+			record |= 0x00000010;
+		}
+		if (IsCharacter (2)) {
+			record |= 0x00000100;
+		}
+		if (IsCharacter (3)) {
+			record |= 0x00001000;
+		}
+		if (IsCharacter (4)) {
+			record |= 0x00010000;
+		}
+		if (IsCharacter (5)) {
+			record |= 0x00100000;
+		}
+
+		PlayerPrefs.SetInt (Data.RECORD_CHARACTER, record);
+		PlayerPrefs.SetInt (Data.RECORD_CHARACTER_SELECT, selectCharacter);
+		PlayerPrefs.SetInt (Data.RECORD_GACHATICKET, gachaTicket);
+	}
+
+	public void LoadCharacter()
+	{
+		int record = PlayerPrefs.GetInt (Data.RECORD_CHARACTER);
+		selectCharacter = PlayerPrefs.GetInt (Data.RECORD_CHARACTER_SELECT);
+		gachaTicket = PlayerPrefs.GetInt (Data.RECORD_GACHATICKET);
+
+		character [0] = 1;
+		if ((record & 0x00000010) > 0)
+			character [1] = 1;
+		if ((record & 0x00000100) > 0)
+			character [2] = 1;
+		if ((record & 0x00001000) > 0)
+			character [3] = 1;
+		if ((record & 0x00010000) > 0)
+			character [4] = 1;
+		if ((record & 0x00100000) > 0)
+			character [5] = 1;
+	}
 
 	private static IEnumerator RequestData ()
 	{

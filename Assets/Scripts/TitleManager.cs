@@ -319,6 +319,46 @@ public class TitleManager : MonoBehaviour
 		}
 	}
 
+	private class Gacha
+	{
+		public float y					{ get; set; }
+		public float timer				{ get; set; }
+		public float gachabarSet		{ get; set; }
+		public float gachabarAngle		{ get; set; }
+		public int gachaMode			{ get; set; }
+		public int selectedGachaNumber	{ get; set; }
+
+		public void keepY( float y )
+		{
+			this.y = y;
+		}
+
+		public void clear()
+		{
+			timer = 0;
+			gachaMode = 0;
+			gachabarSet = 0;
+			gachabarAngle = 0;
+			selectedGachaNumber = 0;
+		}
+
+		public void lottery(int n)
+		{
+			int start = UnityEngine.Random.Range (0, n - 5);
+			int randomNum = UnityEngine.Random.Range (0, n);
+			int hit = n / (n / 5);
+
+			Debug.Log ("Gacha Resut : " + start + " < " + randomNum+" < "+(start+hit));
+			// あたり.
+			if (randomNum >= start && randomNum < start + hit) {
+				selectedGachaNumber = UnityEngine.Random.Range (0, Data.CHARACTER_MAX - 1);
+			} else {
+				// -1 = life 1up.
+				selectedGachaNumber = -1;
+			}
+		}
+	}
+
 	public const int RANKING_PAGE_NUM = 2;
 	public const int RECORD_PAGE_NUM = 3;
 	public const int HELP_PAGE_NUM = 9;
@@ -334,6 +374,10 @@ public class TitleManager : MonoBehaviour
 	private GameObject goExtra;
 	private GameObject goCover;
 	private GameObject goConceal;
+	private GameObject goSelectCharacter;
+	private GameObject goGacha;
+	private GameObject goGachaStart;
+	private GameObject goGachaResult;
 
 	private GameObject goMenuLogo;
 	private GameObject goMenuButtonStart;
@@ -359,6 +403,7 @@ public class TitleManager : MonoBehaviour
 	private GameObject goRankingArrowLeft;
 	private GameObject goRankingButtonLogout;
 	private GameObject goRankingButtonBack;
+	private GameObject goRankingExplanation;
 
 	private GameObject goLogin;
 	private GameObject goSignup;
@@ -403,6 +448,25 @@ public class TitleManager : MonoBehaviour
 	private GameObject goExtraRecommendedTitle;
 	private GameObject goExtraRecommendedButtonMoreGame;
 
+	private GameObject goSelectCharacterGachaTicketText;
+	private GameObject goSelectCharacterGachaTicket;
+	private GameObject goSelectCharacterFrame;
+	private GameObject goSelectCharacterButtonStart;
+	private GameObject goSelectCharacterButtonGacha;
+	private GameObject goSelectCharacterButtonPlayAds;
+	private GameObject goSelectCharacterButtonBack;
+	private List<GameObject> goCharacter;
+
+	private GameObject goGachaBar;
+	private GameObject goGachaCupsule;
+	private GameObject goGachaResultChara;
+	private GameObject goGachaResultGachaTicketText;
+	private GameObject goGachaResultGachaTicket;
+	private GameObject goGachaResultButtonGacha;
+	private GameObject goGachaResultButtonPlayAds;
+	private GameObject goGachaResultButtonBack;
+	private GameObject goGachaResultGotText;
+
 
 	private Catalog catalog;
 	private Bird bird;
@@ -426,7 +490,7 @@ public class TitleManager : MonoBehaviour
 
 	private string connectingText;
 
-
+	private Gacha gacha;
 
 	private void Awake ()
 	{
@@ -459,6 +523,10 @@ public class TitleManager : MonoBehaviour
 		goExtra							= transform.Find ("UI/Extra").gameObject;
 		goCover							= transform.Find ("UI/Cover").gameObject;
 		goConceal						= transform.Find ("UI/Conceal").gameObject;
+		goSelectCharacter				= transform.Find ("UI/SelectCharacter").gameObject;
+		goGacha							= transform.Find ("UI/Gacha").gameObject;
+		goGachaStart					= transform.Find ("UI/Gacha/Playing").gameObject;
+		goGachaResult					= transform.Find ("UI/Gacha/Result").gameObject;
 
 		goMenuLogo						= goMenu.transform.Find ("Logo").gameObject;
 		goMenuButtonStart				= goMenu.transform.Find ("ButtonStart").gameObject;
@@ -484,6 +552,7 @@ public class TitleManager : MonoBehaviour
 		goRankingArrowLeft				= goRanking.transform.Find ("ArrowLeft").gameObject;
 		goRankingButtonBack				= goRanking.transform.Find ("ButtonBack").gameObject;
 		goRankingButtonLogout			= goRanking.transform.Find ("ButtonLogout").gameObject;
+		goRankingExplanation			= goRanking.transform.Find ("Explanation").gameObject;
 
 		goLogin							= goRanking.transform.Find ("Login").gameObject;
 		goSignup						= goRanking.transform.Find ("Signup").gameObject;
@@ -524,13 +593,31 @@ public class TitleManager : MonoBehaviour
 		goExtraRecommendedTitle			= goExtra.transform.Find ("Recommended/Title").gameObject;
 		goExtraRecommendedButtonMoreGame= goExtra.transform.Find ("Recommended/ButtonMoreGame").gameObject;
 
+		goSelectCharacterGachaTicketText= goSelectCharacter.transform.Find ("GachaTicketText").gameObject;
+		goSelectCharacterGachaTicket	= goSelectCharacter.transform.Find ("GachaTicket").gameObject;
+		goSelectCharacterFrame			= goSelectCharacter.transform.Find ("Frame").gameObject;
+		goSelectCharacterFrame.GetComponent<Animation> ().wrapMode = WrapMode.Loop;
+		goSelectCharacterButtonStart	= goSelectCharacter.transform.Find ("ButtonStart").gameObject;
+		goSelectCharacterButtonGacha	= goSelectCharacter.transform.Find ("ButtonGacha").gameObject;
+		goSelectCharacterButtonPlayAds	= goSelectCharacter.transform.Find ("ButtonPlayAds").gameObject;
+		goSelectCharacterButtonBack		= goSelectCharacter.transform.Find ("ButtonBack").gameObject;
+
+		goGachaBar						= goGachaStart.transform.Find ("GachaBar").gameObject;
+		goGachaCupsule					= goGachaStart.transform.Find ("Cupsule").gameObject;
+		goGachaResultChara				= goGachaResult.transform.Find ("Chara").gameObject;
+		goGachaResultGachaTicketText	= goGachaResult.transform.Find ("GachaTicketText").gameObject;
+		goGachaResultGachaTicket		= goGachaResult.transform.Find ("GachaTicket").gameObject;
+		goGachaResultButtonGacha		= goGachaResult.transform.Find ("ButtonGacha").gameObject;
+		goGachaResultButtonPlayAds		= goGachaResult.transform.Find ("ButtonPlayAds").gameObject;
+		goGachaResultButtonBack			= goGachaResult.transform.Find ("ButtonBack").gameObject;
+		goGachaResultGotText			= goGachaResult.transform.Find ("GotText").gameObject;
 
 		goMenuLogo						.GetComponent<Image> ().sprite = Language.sentence == Language.sentenceEn ? spriteLogoEn : spriteLogo;
 		goMenuLogo						.GetComponent<Image> ().SetNativeSize ();
 		goMenuCaution					.transform.Find ("Text").GetComponent<Text> ().text = Language.sentence [Language.START_CAUTION];
 		if (MainManager.Instance.isTutorial) {
 			goMenuButtonStart			.transform.localPosition = goMenuButtonContinue.transform.localPosition;
-			goMenuButtonStart			.GetComponent<Button> ().onClick.AddListener (() => OnMenuButtonStart ());
+			goMenuButtonStart			.GetComponent<Button> ().onClick.AddListener (() => OnMenuButtonStartSelectCharacter ());
 			goMenuButtonContinue.SetActive (false);
 		} else {
 			goMenuButtonStart			.GetComponent<Button> ().onClick.AddListener (() => OnMenuButtonCaution (true));
@@ -540,7 +627,7 @@ public class TitleManager : MonoBehaviour
 		goMenuButtonRecord				.GetComponent<Button> ().onClick.AddListener (() => OnButton (State.Record));
 		goMenuButtonHelp				.GetComponent<Button> ().onClick.AddListener (() => OnButton (State.Help));
 		goMenuButtonExtra				.GetComponent<Button> ().onClick.AddListener (() => OnButton (State.Extra));
-		goMenuCautionButtonYes			.GetComponent<Button> ().onClick.AddListener (() => OnMenuButtonStart ());
+		goMenuCautionButtonYes			.GetComponent<Button> ().onClick.AddListener (() => OnMenuButtonStartSelectCharacter ());
 		goMenuCautionButtonNo			.GetComponent<Button> ().onClick.AddListener (() => OnMenuButtonCaution (false));
 		goMenuVolumeOn					.GetComponent<Button> ().onClick.AddListener (() => OnVolume (true));
 		goMenuVolumeOff					.GetComponent<Button> ().onClick.AddListener (() => OnVolume (false));
@@ -582,6 +669,27 @@ public class TitleManager : MonoBehaviour
 		goExtraLifeNow					.GetComponent<Text> ().text = MainManager.Instance.life.ToString ();
 		goExtraRecommendedButtonMoreGame.GetComponent<Button> ().onClick.AddListener (() => OnExtraButtonMoreGame ());
 
+		goSelectCharacterButtonStart	.GetComponent<Button> ().onClick.AddListener (() => OnMenuButtonStart ());
+		goSelectCharacterButtonGacha	.GetComponent<Button> ().onClick.AddListener (() => OnGacha ());
+		goSelectCharacterButtonPlayAds	.GetComponent<Button> ().onClick.AddListener (() => OnExtraItemButtonMovie ());
+		goSelectCharacterButtonBack		.GetComponent<Button> ().onClick.AddListener (() => OnButton (State.Menu, false));
+		goGachaResultButtonGacha		.GetComponent<Button> ().onClick.AddListener (() => OnGacha ());
+		goGachaResultButtonPlayAds		.GetComponent<Button> ().onClick.AddListener (() => OnExtraItemButtonMovie ());
+		goGachaResultButtonBack			.GetComponent<Button> ().onClick.AddListener (() => OnGachaResultBackButton ());
+
+		goCharacter = new List<GameObject> ();
+		for (int i = 0; i < Data.CHARACTER_MAX; i++) {
+			goCharacter.Add (goSelectCharacter.transform.Find ("Character/Chara" + i).gameObject);
+		}
+		for (int i = 0; i < Data.CHARACTER_MAX; i++) {
+			GameObject obj = goSelectCharacter.transform.Find ("Character/Chara" + i).gameObject;
+			goCharacter [i].GetComponent<SelectCharacter> ().buttonNumber = i;
+			goCharacter [i].GetComponent<Button> ().onClick.AddListener (() => obj.GetComponent<SelectCharacter>().OnSelectCharacter ());
+		}
+
+		gacha = new Gacha ();
+		gacha.clear ();
+		gacha.keepY (goGachaCupsule.transform.localPosition.y);
 
 		bird 	= new Bird ();
 		catalog = new Catalog ();
@@ -606,6 +714,11 @@ public class TitleManager : MonoBehaviour
 		// ランキングアクセス時に毎回通信しないためにここで初期化。
 		// もし毎回させたい場合は、Create()の中で呼ぶ。
 		ranking.Init ();
+
+		// Add 2017.11.7
+		#if UNITY_IOS
+		goExtraRecommendedButtonMoreGame.SetActive(false);
+		#endif
 	}
 	
 	
@@ -626,6 +739,7 @@ public class TitleManager : MonoBehaviour
 		case State.Menu:
 			{
 				goMenu.SetActive (true);
+				goSelectCharacter.SetActive (false);
 
 				time = 0;
 				birdIndex = 0;
@@ -659,7 +773,8 @@ public class TitleManager : MonoBehaviour
 				goSignup.transform.Find ("RePassword/TextPassword").GetComponent<Text> ().text = Language.sentence [Language.RANKING_PASSWORD_CONFIRM];
 				goSignup.transform.Find ("Id/InputField/Placeholder").GetComponent<Text> ().text = Language.sentence [Language.RANKING_NAME_FORM];
 				goSignup.transform.Find ("Password/InputField/Placeholder").GetComponent<Text> ().text = Language.sentence [Language.RANKING_PASSWORD_FORM];
-				
+				goRankingExplanation.GetComponent<Text> ().text = Language.sentence [Language.RANKING_THISSYSTEM];
+
 				// 8/19 エラーの原因は、毎回TitleManagerを削除しているので、未ログイン扱いになってしまう、ゲーム終了後は毎回ランキングデータを持ってこないといけない
 				// もしくはローカルに保存してそれを表示する　こっちのほうが現実的
 
@@ -834,6 +949,8 @@ public class TitleManager : MonoBehaviour
 				bird.Move (Time.deltaTime, Data.TARGET_FRAME_RATE);
 
 				time += Time.deltaTime;
+
+				ProcGacha ();
 			}
 			break;
 		case State.Ranking:
@@ -937,7 +1054,16 @@ public class TitleManager : MonoBehaviour
 		//MainManager.Instance.nendAdIcon.Hide ();
 		MainManager.Instance.bannerView.Hide ();
 	}
-	
+
+	private void OnMenuButtonStartSelectCharacter()
+	{
+		goSelectCharacter.SetActive (true);
+		ReflashGachaTicket ();
+		ShowCharacter ();
+		ChangeCharacterName ();
+		SoundManager.Instance.PlaySe (SoundManager.SeName.SE_OK);
+		//MainManager.Instance.nendAdIcon.Hide ();
+	}
 	
 	
 	private void OnMenuButtonCaution (bool active)
@@ -1015,7 +1141,12 @@ public class TitleManager : MonoBehaviour
 
 	private void OnTwitter ()
 	{
+		// Add 2017.11.7
+		#if UNITY_ANDROID
 		SocialConnector.SocialConnector.Share (Language.sentence [Language.TWITTER], Data.URL, null);
+		#elif UNITY_IOS
+		SocialConnector.SocialConnector.Share (Language.sentence [Language.TWITTER], "ko-chan studio. #retro", null);
+		#endif
 	}
 
 
@@ -1062,7 +1193,155 @@ public class TitleManager : MonoBehaviour
 		#endif
 	}
 
+	// ガチャ.
+	private void OnGacha()
+	{
+		if (MainManager.Instance.gachaTicket <= 0) {
+			SoundManager.Instance.PlaySe (SoundManager.SeName.SE_CANCEL);
+			return;
+		}
+		
+		SoundManager.Instance.PlaySe (SoundManager.SeName.SE_OK);
+		MainManager.Instance.gachaTicket--;
+		ReflashGachaTicket ();
+		gacha.clear ();
+		goGachaCupsule.transform.localPosition = new Vector3 (goGachaCupsule.transform.localPosition.x, gacha.y, goGachaCupsule.transform.localPosition.z);
+		gacha.gachaMode = 1;
+		goGacha.SetActive (true);
+		goGachaStart.SetActive (true);
+		goGachaResult.SetActive (false);
+		goSelectCharacter.SetActive (false);
+	}
 
+	private void OnGachaResultBackButton()
+	{
+		SoundManager.Instance.PlaySe (SoundManager.SeName.SE_CANCEL);
+		ShowCharacter ();
+		goGacha.SetActive (false);
+		goGachaStart.SetActive (false);
+		goGachaResult.SetActive (false);
+		goSelectCharacter.SetActive (true);
+	}
+
+	public void OnSelectCharacter(int number)
+	{
+		if (MainManager.Instance.IsCharacter (number)) {
+			float x = goCharacter [number].transform.localPosition.x;
+			float y = goCharacter [number].transform.localPosition.y + 22;
+			goSelectCharacterFrame.transform.localPosition = new Vector3 (x, y, 0);
+			SoundManager.Instance.PlaySe (SoundManager.SeName.SE_OK);
+			MainManager.Instance.selectCharacter = number;
+			MainManager.Instance.SaveCharacter ();
+		} else {
+			SoundManager.Instance.PlaySe (SoundManager.SeName.SE_CANCEL);
+		}
+	}
+
+	// ガチャ結果で表示するキャラクター or ハート.
+	private void ChangeSprite()
+	{
+		Debug.Log (gacha.selectedGachaNumber);
+		if (gacha.selectedGachaNumber == -1) {
+			string uri = "Textures/hart";
+			Debug.Log (uri);
+			Sprite spt = Resources.Load<Sprite> (uri) as Sprite;
+			goGachaResultChara.GetComponent<Image> ().sprite = spt;
+			goGachaResultChara.GetComponent<Image> ().SetNativeSize ();
+			//goGachaResultChara.transform.localScale = new Vector3 (2, 2, 2);
+		} else {
+			string uri = "Textures/player" + gacha.selectedGachaNumber + "_bottom_0";
+			Sprite spt = Resources.Load<Sprite> (uri) as Sprite;
+			//Debug.Log (uri);
+			goGachaResultChara.GetComponent<Image> ().sprite = spt;
+			goGachaResultChara.GetComponent<Image> ().SetNativeSize ();
+			goGachaResultChara.transform.localScale = new Vector3 (2, 2, 2);
+		}
+	}
+
+	// ガチャ演出と抽選.
+	private void ProcGacha()
+	{
+		if (gacha.gachaMode > 0) {
+			// 演出スキップ.
+			bool isSkip = false;
+			if (Input.GetMouseButton (0)) {
+				gacha.gachaMode = 8;
+				isSkip = true;
+			}
+			// カプセルが転がる.
+			if (gacha.gachaMode == 8) {
+				goGachaCupsule.SetActive (true);
+			}
+			// ガチャアプセルのアニメスタート.
+			if (goGachaCupsule.activeSelf) {
+				if (goGachaCupsule.transform.localPosition.y <= -599 || isSkip) {
+					gacha.lottery (100);
+					ChangeSprite();
+					MainManager.Instance.SaveCharacter ();
+					if (gacha.selectedGachaNumber == -1) {
+						goGachaResultGotText.GetComponent<Text> ().text = Language.sentence [Language.LIFEIS1UP];
+						MainManager.Instance.life++;
+					} else {
+						gacha.selectedGachaNumber = 3;
+						goGachaResultGotText.GetComponent<Text> ().text = Language.sentence [Language.YOUGOTCHARA];
+						MainManager.Instance.GetCharacter (gacha.selectedGachaNumber);
+					}
+					// 結果へ.
+					SoundManager.Instance.PlaySe (SoundManager.SeName.SE_RESULT);
+					goGachaResult.SetActive (true);
+					goGachaStart.SetActive (!goGachaResult.activeSelf);
+					goGachaCupsule.SetActive(!goGachaResult.activeSelf);
+					gacha.clear ();
+					goGachaCupsule.transform.localPosition = new Vector3 (goGachaCupsule.transform.localPosition.x, gacha.y, goGachaCupsule.transform.localPosition.z);
+				}
+
+				return;
+			}
+			// 回転処理.
+			if (gacha.gachaMode % 2 == 1) {
+				gacha.timer = Time.time;
+				gacha.gachabarAngle = 0;
+				gacha.gachabarSet = (20 + UnityEngine.Random.Range (10, 30));
+				gacha.gachaMode++;
+			}
+			if (gacha.gachaMode % 2 == 0) {
+				if (Time.time >= gacha.timer + UnityEngine.Random.Range (0.5f, 1.25f)) {
+					SoundManager.Instance.PlaySe (SoundManager.SeName.SE_GACHA);
+					gacha.gachabarAngle += 10;
+					if (gacha.gachabarAngle >= gacha.gachabarSet) {
+						gacha.gachaMode++;
+					}
+					goGachaBar.transform.localEulerAngles += new Vector3 (0, 0, -(gacha.gachabarAngle % 360));
+				}
+			}
+		}
+	}
+
+	// キャラクター選択でキャラクター表示.
+	private void ShowCharacter()
+	{
+		for (int i = 0; i < Data.CHARACTER_MAX; i++) {
+			if (MainManager.Instance.IsCharacter (i)) {
+				goCharacter [i].GetComponent<Image> ().color = new Color (1, 1, 1, 1);
+			}
+		}
+	}
+
+	private void ChangeCharacterName()
+	{
+		for (int i = 0; i < Data.CHARACTER_MAX; i++) {
+			goSelectCharacter.transform.Find ("Character/Chara" + i + "Name").GetComponent<Text> ().text = Language.sentence [Language.CHARANAME_SAMURAI + i];
+		}
+	}
+
+	// チケット数を更新.
+	private void ReflashGachaTicket()
+	{
+		goSelectCharacterGachaTicketText.GetComponent<Text> ().text = Language.sentence [Language.GACHA_RESULT_GACHATICKETTEXT];
+		goSelectCharacterGachaTicket.GetComponent<Text> ().text = MainManager.Instance.gachaTicket.ToString();
+		goGachaResultGachaTicketText.GetComponent<Text> ().text = Language.sentence [Language.GACHA_RESULT_GACHATICKETTEXT];
+		goGachaResultGachaTicket.GetComponent<Text> ().text = MainManager.Instance.gachaTicket.ToString();
+	}
 
 	private void CheckBackKey ()
 	{
@@ -1083,6 +1362,11 @@ public class TitleManager : MonoBehaviour
 	}
 
 
+
+
+// ========================================
+// 以下、ランキング関連.
+// ========================================
 	private void OnLogin()
 	{
 		string id = goLogin.transform.Find("Id/InputField/Text").GetComponent<Text>().text;

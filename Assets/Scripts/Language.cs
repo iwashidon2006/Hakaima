@@ -60,7 +60,16 @@ public class Language
 	public const int RANKING_PASSWORD_FORM			= 54;
 	public const int LOGOUT							= 55;
 	public const int REQUEST_OVERLOAD				= 56;
-
+	public const int RANKING_THISSYSTEM				= 57;
+	public const int CHARANAME_SAMURAI				= 58;
+	public const int CHARANAME_KUNOICHI				= 59;
+	public const int CHARANAME_NINJA				= 60;
+	public const int CHARANAME_MIKO					= 61;
+	public const int CHARANAME_MUSUME				= 62;
+	public const int CHARANAME_KENSHI				= 63;
+	public const int YOUGOTCHARA					= 64;
+	public const int LIFEIS1UP						= 65;
+	public const int GACHA_RESULT_GACHATICKETTEXT	= 66;
 
 
 	public static Dictionary<int, string> sentence = sentenceJa;
@@ -120,6 +129,16 @@ public class Language
 		{RANKING_PASSWORD_FORM,			"半角英数字"},
 		{LOGOUT,						"ログアウトしました"},
 		{REQUEST_OVERLOAD,				"申し訳ございません。\nランキングサーバーの使用制限が超過しました。\n次月までお待ちください。"},
+		{RANKING_THISSYSTEM,			"ランキングには、NIFTYクラウドを利用しています。"},
+		{CHARANAME_SAMURAI,				"侍"},
+		{CHARANAME_KUNOICHI,			"くノ一"},
+		{CHARANAME_NINJA,				"忍者"},
+		{CHARANAME_MIKO,				"巫女"},
+		{CHARANAME_MUSUME,				"町娘"},
+		{CHARANAME_KENSHI,				"剣士"},
+		{YOUGOTCHARA,					"キャラを獲得しました！"},
+		{LIFEIS1UP,						"残機が１つ増えました。"},
+		{GACHA_RESULT_GACHATICKETTEXT,	"持っているガチャチケット数"},
 	};
 
 	public static Dictionary<int, string> sentenceEn = new Dictionary<int, string> (){
@@ -175,7 +194,17 @@ public class Language
 		{RANKING_PASSWORD_CONFIRM,		"   Re-Password:"},
 		{RANKING_NAME_FORM,				"Half-width characters."},
 		{RANKING_PASSWORD_FORM,			"Half-width characters."},
-		{LOGOUT,							"Logged out."},
+		{LOGOUT,						"Logged out."},
 		{REQUEST_OVERLOAD,				"So sorry. To request is over load\nto ranking server.\nPlease wait next month."},
+		{RANKING_THISSYSTEM,			"This ranking system uses NIFTY Cloud."},
+		{CHARANAME_SAMURAI,				"Samurai"},
+		{CHARANAME_KUNOICHI,			"Kunoichi"},
+		{CHARANAME_NINJA,				"Ninja"},
+		{CHARANAME_MIKO,				"Miko"},
+		{CHARANAME_MUSUME,				"Musume"},
+		{CHARANAME_KENSHI,				"Kenshi"},
+		{YOUGOTCHARA,					"You got a character！"},
+		{LIFEIS1UP,						"Life is 1UP."},
+		{GACHA_RESULT_GACHATICKETTEXT,	"You have Gacha Ticket."},
 	};
 }
