@@ -131,7 +131,41 @@ public class GameManager : MonoBehaviour
 			this.pre = -1;
 		}
 	}
-	
+
+	private class MyWeapon
+	{
+		private const int MAX = 99;
+		private int _pre;
+
+		public int now {
+			get {
+				return MainManager.Instance.weapon;
+			}
+			set {
+				if (value < 0)
+					value = 0;
+				else if (value > MAX)
+					value = MAX;
+				MainManager.Instance.weapon = value;
+			}
+		}
+
+		public int pre {
+			get {
+				return this._pre;
+			}
+			set {
+				this._pre = value;
+			}
+		}
+
+		public MyWeapon (int value)
+		{
+			this.now = value;
+			this.pre = -1;
+		}
+	}
+
 	
 	private class RemainingTime
 	{
@@ -418,6 +452,7 @@ public class GameManager : MonoBehaviour
 		public GameObject goEncourage;
 		public GameObject goButtonBack;
 		public GameObject goButtonMovie;
+		public GameObject goButtonEnd;
 		public GameObject goVolumeOn;
 		public GameObject goVolumeOff;
 	}
@@ -493,24 +528,29 @@ public class GameManager : MonoBehaviour
 
 	private List<Chip> chipList;
 	private Player player;
+	private List<Weapon> playerWeaponList;
 	private List<Enemy> enemyList;
-	private List<Weapon> weaponList;
+	private List<Weapon> enemyWeaponList;
 	private List<Item> itemList;
 	private List<Bonus> bonusList;
 	private List<Hakaima.Light> lightList;
+	private List<Item> specialItemList;
 
 	private List<GroupChip> groupChipList;
 	private GroupPlayer groupPlayer;
+	private List<GroupWeapon> groupPlayerWeaponList;
 	private List<GroupEnemy> groupEnemyList;
-	private List<GroupWeapon> groupWeaponList;
+	private List<GroupWeapon> groupEnemyWeaponList;
 	private List<GroupItem> groupItemList;
 	private List<GroupBonus> groupBonusList;
 	private List<GroupLight> groupLightList;
+	private List<GroupItem> groupSpecialItemList;
 	private List<GroupNumber> groupNumberList;
 
 	private bool isPause;
 	private Score score;
 	private Life life;
+	private MyWeapon myWeapon;
 	private RemainingTime remainingTime;
 	private List<OwnerItem> ownerItemList;
 	private List<Number> numberList;
@@ -520,10 +560,15 @@ public class GameManager : MonoBehaviour
 	private GameObject goStage;
 	private GameObject goScore;
 	private GameObject goScoreHigh;
+	private GameObject goPlayer1;
 	private GameObject goLife;
+	private GameObject goMyWeapon;
 	private GameObject goRemainingTime;
 	private GameObject goCompletion;
 	private GameObject goCompletionText;
+	private GameObject goPuaseTwitterButton;
+	private GameObject goContinueTwitterButton;
+	private GameObject goStageClearTwitterButton;
 	private List<GameObject> goOwnerItemList;
 	private List<GameObject> goOwnerItemFrameList;
 	private List<GameObject> goNumberList;
@@ -595,10 +640,12 @@ public class GameManager : MonoBehaviour
 		groupChipList	= new List<GroupChip> ();
 		groupPlayer		= new GroupPlayer ();
 		groupEnemyList	= new List<GroupEnemy> ();
-		groupWeaponList = new List<GroupWeapon> ();
+		groupPlayerWeaponList = new List<GroupWeapon> ();
+		groupEnemyWeaponList = new List<GroupWeapon> ();
 		groupItemList	= new List<GroupItem> ();
 		groupBonusList	= new List<GroupBonus> ();
 		groupLightList	= new List<GroupLight> ();
+		groupSpecialItemList = new List<GroupItem> ();
 
 
 		goCover			= transform.Find ("UI/Cover").gameObject;
@@ -624,7 +671,9 @@ public class GameManager : MonoBehaviour
 		goStage					= transform.Find ("UI/Information/Stage").gameObject;
 		goScore					= transform.Find ("UI/Information/Score/PlayerScore(Value)").gameObject;
 		goScoreHigh				= transform.Find ("UI/Information/Score/HiScore(Value)").gameObject;
+		goPlayer1				= transform.Find ("UI/Information/Score/PlayerScore(Title)").gameObject;
 		goLife					= transform.Find ("UI/Information/Life").gameObject;
+		goMyWeapon				= transform.Find ("UI/Information/ThrowWepon/Remaining").gameObject;
 		goRemainingTime			= transform.Find ("UI/Information/Time").gameObject;
 		goCompletion			= transform.Find ("UI/Information/Completion").gameObject;
 		goCompletionText		= transform.Find ("UI/Information/Completion/Text").gameObject;
@@ -682,6 +731,7 @@ public class GameManager : MonoBehaviour
 		collectPause.goEncourage		= collectPause.go.transform.Find ("Encourage").gameObject;
 		collectPause.goButtonBack		= collectPause.go.transform.Find ("ButtonBack").gameObject;
 		collectPause.goButtonMovie		= collectPause.go.transform.Find ("ButtonMovie").gameObject;
+		collectPause.goButtonEnd		= collectPause.go.transform.Find ("ButtonEnd").gameObject;
 		collectPause.goVolumeOn			= collectPause.go.transform.Find ("Volume/On").gameObject;
 		collectPause.goVolumeOff		= collectPause.go.transform.Find ("Volume/Off").gameObject;
 
@@ -718,6 +768,13 @@ public class GameManager : MonoBehaviour
 		collectContinue.goButtonMovie		= collectContinue.go.transform.Find ("ButtonMovie").gameObject;
 		collectContinue.goButtonEnd			= collectContinue.go.transform.Find ("ButtonEnd").gameObject;
 
+		goPuaseTwitterButton				= collectPause.go.transform.Find ("Twitter").gameObject;
+		goContinueTwitterButton				= collectContinue.go.transform.Find ("Twitter").gameObject;
+		goStageClearTwitterButton			= collectClear.go.transform.Find ("Twitter").gameObject;
+		goPuaseTwitterButton				.GetComponent<Button> ().onClick.AddListener (() => OnTwitter ());
+		goContinueTwitterButton				.GetComponent<Button> ().onClick.AddListener (() => OnTwitter ());
+		goStageClearTwitterButton			.GetComponent<Button> ().onClick.AddListener (() => OnTwitter ());
+		goStageClearTwitterButton.SetActive (false);
 
 		goCover.SetActive (true);
 
@@ -776,6 +833,7 @@ public class GameManager : MonoBehaviour
 
 		collectPause.goButtonBack			.GetComponent<Button> ().onClick.AddListener (() => OnPause (false));
 		collectPause.goButtonMovie			.GetComponent<Button> ().onClick.AddListener (() => OnPauseMovie ());
+		collectPause.goButtonEnd			.GetComponent<Button> ().onClick.AddListener (() => OnPauseEnd ());
 		collectPause.goVolumeOn				.GetComponent<Button> ().onClick.AddListener (() => OnVolume (true));
 		collectPause.goVolumeOff			.GetComponent<Button> ().onClick.AddListener (() => OnVolume (false));
 		collectContinue.goButtonContinue	.GetComponent<Button> ().onClick.AddListener (() => OnContinue (CONTINUE_COMMAND_YES));
@@ -795,7 +853,7 @@ public class GameManager : MonoBehaviour
 		});
 		goDebug.transform.Find ("NextStage").GetComponent<Button> ().onClick.AddListener (() => {
 			keepCellList = null;
-			MainManager.Instance.NextStage (life.now);
+			MainManager.Instance.NextStage (life.now, myWeapon.now);
 		});
 
 		OnDebugDamageClick ();
@@ -810,6 +868,7 @@ public class GameManager : MonoBehaviour
 	{
 		score = new Score (MainManager.Instance.score, MainManager.Instance.scoreHigh);
 		life = new Life (MainManager.Instance.life);
+		myWeapon = new MyWeapon (MainManager.Instance.weapon);
 		remainingTime = new RemainingTime (MainManager.Instance.isTutorial ? 0 : Data.GetStageData (MainManager.Instance.stage).limitTime);
 
 		if (MainManager.Instance.isTutorial)
@@ -882,7 +941,8 @@ public class GameManager : MonoBehaviour
 			}
 		}
 
-		weaponList = new List<Weapon> ();
+		playerWeaponList = new List<Weapon> ();
+		enemyWeaponList = new List<Weapon> ();
 
 		itemList = new List<Item> ();
 		for (int i = 0; i < cellList.Count; i++) {
@@ -913,6 +973,8 @@ public class GameManager : MonoBehaviour
 				groupLightList.Add (groupLight);
 			}
 		}
+
+		specialItemList = new List<Item> ();
 
 		goStage.GetComponent<Text> ().text = string.Format ("STAGE {0}", MainManager.Instance.stage + 1);
 
@@ -965,6 +1027,7 @@ public class GameManager : MonoBehaviour
 		if (MainManager.Instance.isTutorial) {
 			goPause.SetActive (false);
 			goStage.GetComponent<Text> ().text = "TUTORIAL";
+			FirebaseAnalyticsManager.Instance.LogEvent (Data.FIREBASE_EVNET_START_TUTORIAL);
 		}
 
 		if (MainManager.Instance.isTutorial) {
@@ -1000,9 +1063,24 @@ public class GameManager : MonoBehaviour
 		ResourceManager.Instance.SetAllEnemy ();
 		ResourceManager.Instance.SetPlayer (MainManager.Instance.selectCharacter);
 		transform.Find ("UI/Information/Face").GetComponent<Image>().sprite = ResourceManager.Instance.spriteUpperPlayer;
+		SetWeapon ();
+
+		goPlayer1.GetComponent<Text> ().text = Language.sentenceEn [Language.CHARANAME_SAMURAI + MainManager.Instance.selectCharacter];
 	}
 
+	private void SetWeapon()
+	{
+		GameObject goWeapon = transform.Find ("UI/Information/ThrowWepon/Wepon").gameObject;
 
+		if (MainManager.Instance.IsWeaponCharacter(MainManager.Instance.selectCharacter)) {
+			goWeapon.transform.parent.gameObject.SetActive (true);
+			goWeapon.GetComponent<Image> ().sprite = ResourceManager.Instance.spritePlayerWeapon;
+		} else {
+			goWeapon.transform.parent.gameObject.SetActive (false);
+		}
+
+		goMyWeapon.GetComponent<Text> ().text = string.Format ("{0:00}", myWeapon.now).ToString ();
+	}
 
 	private void Run ()
 	{
@@ -1020,10 +1098,13 @@ public class GameManager : MonoBehaviour
 								player.Walk (Player.Compass.Top, true);
 								player.SetSpeed (Data.SPEED_3);
 								player.SetImageCoefficient (Data.GetPlayerImageCoefficient (Hakaima.Terrain.Type.Soil));
+								player.SetBlind (true, Color.cyan);
 								enemyList.ForEach (obj => obj.SetBlind (true, Color.white));
 								//MainManager.Instance.nendAdBanner.Hide ();
 								MainManager.Instance.bannerView.Hide ();
+								goStageClearTwitterButton.SetActive (false);
 							} else if (time >= 2) {
+								player.SetBlind (false);
 								enemyList.ForEach (obj => obj.SetBlind (false));
 								state = State.Play;
 								time = 0;
@@ -1046,6 +1127,7 @@ public class GameManager : MonoBehaviour
 								SoundManager.Instance.PlaySe (SoundManager.SeName.JINGLE_START);
 								//MainManager.Instance.nendAdBanner.Hide ();
 								MainManager.Instance.bannerView.Hide ();
+								FirebaseAnalyticsManager.Instance.LogEvent (Data.FIREBASE_SCREEN_STAGE + MainManager.Instance.stage);
 							} else if (time >= 4) {
 								pattern = 1;
 								time = 0;
@@ -1058,9 +1140,11 @@ public class GameManager : MonoBehaviour
 								player.Walk (Player.Compass.Top, true);
 								player.SetSpeed (Data.SPEED_3);
 								player.SetImageCoefficient (Data.GetPlayerImageCoefficient (Hakaima.Terrain.Type.Soil));
+								player.SetBlind (true, Color.cyan);
 							} else if (time >= 1) {
 								if (player.state == Player.State.Wait) {
 									collectReady.go.SetActive (false);
+									player.SetBlind (false);
 									enemyList.ForEach (obj => obj.SetBlind (false));
 									state = State.Play;
 									time = 0;
@@ -1223,6 +1307,7 @@ public class GameManager : MonoBehaviour
 									if (groupPlayer.canHoleCycle) {
 										if (chip1 != null)
 										if (Data.GetTerrainData (chip1.terrain.type).isDigging)
+										if (playerWeaponList.Count == 0)
 										if (chip1.obstacleList.Count == 0) {
 											int point = chip1.pointX + chip1.pointY * Data.LENGTH_X;
 											groupChipList [point].holeTime += Data.DELTA_TIME * groupPlayer.hoePer;
@@ -1237,6 +1322,24 @@ public class GameManager : MonoBehaviour
 														Item item = itemList.Find (obj => obj.pointX == chip1.pointX && obj.pointY == chip1.pointY);
 														if (item != null)
 															item.Appear ();
+														else {
+															Item.Type itemType = Item.Type.None;
+															float ran = UnityEngine.Random.value * 100;
+															if (ran < MainManager.Instance.GetTicketItemPercent ())
+																itemType = Item.Type.Ticket;
+															else if (ran < MainManager.Instance.GetTicketItemPercent () + MainManager.Instance.GetWeaponItemPercent () && MainManager.Instance.IsWeaponCharacter (MainManager.Instance.selectCharacter))
+																itemType = Item.Type.Weapon;
+															if (itemType != Item.Type.None) {
+																Item specialItem = new Item ();
+																specialItem.Init (itemType, chip1.pointX, chip1.pointY);
+																specialItem.Appear ();
+																specialItemList.Add (specialItem);
+																GroupItem groupSpecialItem = new GroupItem ();
+																groupSpecialItem.gameObject = Instantiate (goOriginItem) as GameObject;
+																groupSpecialItem.gameObject.transform.SetParent (goOriginItem.transform.parent);
+																groupSpecialItemList.Add (groupSpecialItem);
+															}
+														}
 														PlayerPrefs.SetInt (Data.RECORD_HOLE_OPEN, PlayerPrefs.GetInt (Data.RECORD_HOLE_OPEN) + 1);
 														break;
 													case Hole.State.Close:
@@ -1311,7 +1414,7 @@ public class GameManager : MonoBehaviour
 													}
 													return tombChipList;
 												};
-									
+												
 												List<Chip> list = new List<Chip> ();
 												list = getTombChipList (chip1, list);
 												for (int i = 0; i < list.Count; i++) {
@@ -1359,6 +1462,20 @@ public class GameManager : MonoBehaviour
 													SoundManager.Instance.PlaySe (SoundManager.SeName.SE_KNOCK);
 												if (PlayerPrefs.GetInt (Data.RECORD_MAX_TOMB_COLLAPSE) < list.Count - 1) {
 													PlayerPrefs.SetInt (Data.RECORD_MAX_TOMB_COLLAPSE, list.Count - 1);
+												}
+											} else {
+												if (canThrough)
+												if (MainManager.Instance.IsWeaponCharacter (MainManager.Instance.selectCharacter) && myWeapon.now > 0) {
+													Weapon weapon = new Weapon ();
+													weapon.Init ((Weapon.Compass)player.compass, player.positionX, player.positionY);
+													playerWeaponList.Add (weapon);
+													GroupWeapon groupWeapon = new GroupWeapon ();
+													groupWeapon.gameObject = Instantiate (goOriginWeapon) as GameObject;
+													groupWeapon.gameObjectImage = groupWeapon.gameObject.transform.Find ("Image").gameObject;
+													groupPlayerWeaponList.Add (groupWeapon);
+													SoundManager.Instance.PlaySe (SoundManager.SeName.SE_TOUCH);
+													myWeapon.now--;
+													goMyWeapon.GetComponent<Text> ().text = string.Format ("{0:00}", myWeapon.now).ToString ();
 												}
 											}
 										}
@@ -1471,11 +1588,11 @@ public class GameManager : MonoBehaviour
 													if (isWeapon) {
 														Weapon weapon = new Weapon ();
 														weapon.Init ((Weapon.Compass)enemy.compass, enemy.positionX, enemy.positionY);
-														weaponList.Add (weapon);
+														enemyWeaponList.Add (weapon);
 														GroupWeapon groupWeapon = new GroupWeapon ();
 														groupWeapon.gameObject = Instantiate (goOriginWeapon) as GameObject;
 														groupWeapon.gameObjectImage = groupWeapon.gameObject.transform.Find ("Image").gameObject;
-														groupWeaponList.Add (groupWeapon);
+														groupEnemyWeaponList.Add (groupWeapon);
 														SoundManager.Instance.PlaySe (SoundManager.SeName.SE_TOUCH);
 													}
 													groupEnemy.weaponCount++;
@@ -1539,13 +1656,15 @@ public class GameManager : MonoBehaviour
 					chipList.ForEach (obj => obj.Move (Data.DELTA_TIME, Data.TARGET_FRAME_RATE));
 					player.Move (Data.DELTA_TIME, Data.TARGET_FRAME_RATE);
 					enemyList.ForEach (obj => obj.Move (Data.DELTA_TIME, Data.TARGET_FRAME_RATE));
-					weaponList.ForEach (obj => obj.Move (Data.DELTA_TIME, Data.TARGET_FRAME_RATE));
+					playerWeaponList.ForEach (obj => obj.Move (Data.DELTA_TIME, Data.TARGET_FRAME_RATE));
+					enemyWeaponList.ForEach (obj => obj.Move (Data.DELTA_TIME, Data.TARGET_FRAME_RATE));
 					bonusList.ForEach (obj => obj.Move (Data.DELTA_TIME, Data.TARGET_FRAME_RATE));
 					numberList.ForEach (obj => obj.Move (Data.DELTA_TIME, Data.TARGET_FRAME_RATE));
 					groupPlayer.lifeup.Move (Data.DELTA_TIME, Data.TARGET_FRAME_RATE);
 				
 			
 					groupPlayer.isSweat = false;
+					canThrough = true;
 					for (int i = 0; i < enemyList.Count; i++) {
 						Enemy enemy = enemyList [i];
 						GroupEnemy groupEnemy = groupEnemyList [i];
@@ -1557,6 +1676,7 @@ public class GameManager : MonoBehaviour
 						case Enemy.State.Fall:
 							{
 								bool isDie = false;
+								bool isDamage = false;
 								switch (enemy.state) {
 								case Enemy.State.Wait:
 									{
@@ -1704,15 +1824,28 @@ public class GameManager : MonoBehaviour
 												groupEnemy.dieTime = 0;
 												PlayerPrefs.SetInt (Data.RECORD_ENEMY_DIE_TO_TOMB, PlayerPrefs.GetInt (Data.RECORD_ENEMY_DIE_TO_TOMB) + 1);
 											} else {
-												groupEnemy.invincibleTime = 5;
-												enemy.SetBlind (true, Color.white);
-												if (groupEnemy.isBoss)
-												if (groupEnemy.lifeCount == 1)
-													groupEnemy.angryTime = Data.GetStageData (MainManager.Instance.stage).limitTime;
-
+												isDamage = true;
 											}
 										}
 									}
+								}
+								for (int j = 0; j < playerWeaponList.Count;) {
+									Weapon weapon = playerWeaponList [j];
+									if (Math.Abs (weapon.positionX - enemy.positionX) < weapon.size * weapon.scaleX && Math.Abs (weapon.positionY - enemy.positionY) < weapon.size * weapon.scaleY) {
+										groupEnemy.lifeCount--;
+										if (groupEnemy.lifeCount == 0) {
+											isDie = true;
+											groupEnemy.dieType = GroupEnemy.DieType.Tomb;
+											groupEnemy.dieTime = 0;
+										} else {
+											isDamage = true;
+										}
+										Destroy (groupPlayerWeaponList [j].gameObject);
+										playerWeaponList.RemoveAt (j);
+										groupPlayerWeaponList.RemoveAt (j);
+										continue;
+									}
+									j++;
 								}
 								if (isDie) {
 									if (groupEnemy.isBoss) {
@@ -1749,6 +1882,12 @@ public class GameManager : MonoBehaviour
 											appearEnemyPersonTime = APPEAR_ENEMY_PERSON_TIME_COEFFICIENT * (2 + (int)(UnityEngine.Random.value * 2));
 										}
 									}
+								} else if (isDamage) {
+									groupEnemy.invincibleTime = 5;
+									enemy.SetBlind (true, Color.white);
+									if (groupEnemy.isBoss)
+									if (groupEnemy.lifeCount == 1)
+										groupEnemy.angryTime = Data.GetStageData (MainManager.Instance.stage).limitTime;
 								}
 							}
 							break;
@@ -1873,8 +2012,8 @@ public class GameManager : MonoBehaviour
 													SoundManager.Instance.PlaySe (SoundManager.SeName.SE_BUMP);
 												}
 											}
-											for (int i = 0; i < weaponList.Count; i++) {
-												Weapon weapon = weaponList [i];
+											for (int i = 0; i < enemyWeaponList.Count; i++) {
+												Weapon weapon = enemyWeaponList [i];
 												if (Math.Abs (weapon.positionX - player.positionX) < weapon.size * weapon.scaleX && Math.Abs (weapon.positionY - player.positionY) < weapon.size * weapon.scaleY) {
 													player.Damage ();
 													ownerItemList.Find (obj => obj.type == Item.Type.Sandal).state = OwnerItem.State.NoHave;
@@ -1971,6 +2110,25 @@ public class GameManager : MonoBehaviour
 								}
 								i++;
 							}
+							for (int i = 0; i < specialItemList.Count;) {
+								Item specialItem = specialItemList [i];
+								if (Math.Abs (specialItem.positionX - player.positionX) < player.size && Math.Abs (specialItem.positionY - player.positionY) < player.size) {
+									Destroy (groupSpecialItemList [i].gameObject);
+									specialItemList.RemoveAt (i);
+									groupSpecialItemList.RemoveAt (i);
+									SoundManager.Instance.PlaySe (SoundManager.SeName.JINGLE_GOT);
+									switch (specialItem.type) {
+									case Item.Type.Ticket:
+										MainManager.Instance.AddTicket ();
+										break;
+									case Item.Type.Weapon:
+										MainManager.Instance.AddWeapon ();
+										break;
+									}
+									continue;
+								}
+								i++;
+							}
 							for (int i = 0; i < bonusList.Count;) {
 								Bonus bonus = bonusList [i];
 								if (Math.Abs (bonus.positionX - player.positionX) < player.size && Math.Abs (bonus.positionY - player.positionY) < player.size) {
@@ -2029,6 +2187,10 @@ public class GameManager : MonoBehaviour
 											loop = true;
 											SoundManager.Instance.StopBgm ();
 											SoundManager.Instance.PlaySe (SoundManager.SeName.JINGLE_CLEAR);
+											FirebaseAnalyticsManager.Instance.LogScreen (Data.FIREBASE_SCREEN_STAGECLEAR + MainManager.Instance.stage.ToString ());
+											//if (ShowAdsBanner (15)) {
+											//	FirebaseAnalyticsManager.Instance.LogEvent (Data.FIREBASE_EVENT_STAGECLEAR_BANNER_ADS);
+											//}
 										}
 									} else {
 										remainingTime.now -= Data.DELTA_TIME;
@@ -2040,6 +2202,10 @@ public class GameManager : MonoBehaviour
 											loop = true;
 											SoundManager.Instance.StopBgm ();
 											SoundManager.Instance.PlaySe (SoundManager.SeName.JINGLE_CLEAR_TIME0);
+											FirebaseAnalyticsManager.Instance.LogScreen (Data.FIREBASE_SCREEN_STAGECLEAR_RUN + MainManager.Instance.stage.ToString ());
+											//if (ShowAdsBanner (20)) {
+											//	FirebaseAnalyticsManager.Instance.LogEvent (Data.FIREBASE_EVENT_STAGECLEAR_BANNER_ADS);
+											//}
 										}
 									}
 								}
@@ -2067,12 +2233,50 @@ public class GameManager : MonoBehaviour
 						break;
 					}
 
-					for (int i = 0; i < weaponList.Count;) {
-						Weapon weapon = weaponList [i];
+					for (int i = 0; i < playerWeaponList.Count;) {
+						Weapon weapon = playerWeaponList [i];
+						bool isEnd = false;
 						if (weapon.isEnd) {
-							Destroy (groupWeaponList [i].gameObject);
-							weaponList.RemoveAt (i);
-							groupWeaponList.RemoveAt (i);
+							isEnd = true;
+						}
+						{
+							int pointX = Mathf.FloorToInt ((weapon.positionX + weapon.size / 2) / weapon.size);
+							int pointY = Mathf.FloorToInt ((weapon.positionY + weapon.size / 2) / weapon.size);
+							if (pointX < 0 || pointX == Data.LENGTH_X) {
+								isEnd = true;
+							} else if (pointY < 0 || pointY == Data.LENGTH_Y) {
+								isEnd = true;
+							} else {
+								Chip chip = chipList [pointX + pointY * Data.LENGTH_X];
+								if (chip.obstacleList.Exists (obj => !Data.GetObstacleData (obj.type).isThrough))
+									isEnd = true;
+							}
+						}
+						if (isEnd) {
+							Destroy (groupPlayerWeaponList [i].gameObject);
+							playerWeaponList.RemoveAt (i);
+							groupPlayerWeaponList.RemoveAt (i);
+							continue;
+						}
+						i++;
+					}
+					for (int i = 0; i < enemyWeaponList.Count;) {
+						Weapon weapon = enemyWeaponList [i];
+						bool isEnd = false;
+						if (weapon.isEnd) {
+							isEnd = true;
+						}
+						{
+							int pointX = Mathf.FloorToInt ((weapon.positionX + weapon.size / 2) / weapon.size);
+							int pointY = Mathf.FloorToInt ((weapon.positionY + weapon.size / 2) / weapon.size);
+							Chip chip = chipList [pointX + pointY * Data.LENGTH_X];
+							if (chip.obstacleList.Exists (obj => !Data.GetObstacleData (obj.type).isThrough))
+								isEnd = true;
+						}
+						if (isEnd) {
+							Destroy (groupEnemyWeaponList [i].gameObject);
+							enemyWeaponList.RemoveAt (i);
+							groupEnemyWeaponList.RemoveAt (i);
 							continue;
 						}
 						i++;
@@ -2201,6 +2405,7 @@ public class GameManager : MonoBehaviour
 						loop = true;
 						SoundManager.Instance.StopBgm ();
 						SoundManager.Instance.PlaySe (SoundManager.SeName.JINGLE_CLEAR);
+						FirebaseAnalyticsManager.Instance.LogScreen (Data.FIREBASE_SCREEN_STAGECLEAR + MainManager.Instance.stage.ToString ());
 					}
 				}
 				break;
@@ -2263,6 +2468,9 @@ public class GameManager : MonoBehaviour
 								if (time >= aimTime) {
 									pattern = 1;
 									time = 0;
+									//MainManager.Instance.nendAdBanner.Show ();
+									MainManager.Instance.bannerView.Show ();		// これが連続で呼ばれている?.
+									goStageClearTwitterButton.SetActive (true);
 								}
 							}
 						}
@@ -2271,8 +2479,6 @@ public class GameManager : MonoBehaviour
 							color.a = Mathf.Lerp (0, 1, 2 * time);
 							collectClear.colorEnemy = color;
 							collectClear.colorEnemyScore = color;
-							//MainManager.Instance.nendAdBanner.Show ();
-							MainManager.Instance.bannerView.Show ();
 							if (time >= 0.5f) {
 								pattern = 2;
 								time = 0;
@@ -2371,6 +2577,7 @@ public class GameManager : MonoBehaviour
 								}
 								//MainManager.Instance.nendAdBanner.Show ();
 								MainManager.Instance.bannerView.Show ();
+								goStageClearTwitterButton.SetActive (true);
 							}
 							if (time >= 1) {
 								pattern = 11;
@@ -2400,9 +2607,15 @@ public class GameManager : MonoBehaviour
 						continueCommand = CONTINUE_COMMAND_NONE;
 						SoundManager.Instance.StopBgm ();
 						SoundManager.Instance.PlaySe (SoundManager.SeName.JINGLE_GAMEOVER);
+						FirebaseAnalyticsManager.Instance.LogEvent (Data.FIREBASE_SCREEN_GAMEOVER);
 						//MainManager.Instance.nendAdBanner.Show ();
 						MainManager.Instance.bannerView.Show ();
+						if (ShowAdsBanner (15)) {
+							FirebaseAnalyticsManager.Instance.LogEvent (Data.FIREBASE_EVENT_GAMEOVER_BANNER_ADS);
+						}
 					}
+						
+					LifeUpForAds ();
 
 					switch (continueCommand) {
 					case CONTINUE_COMMAND_MOVIE:
@@ -2417,11 +2630,13 @@ public class GameManager : MonoBehaviour
 							player.SetBlind (true, Color.white);
 							groupPlayer.invincibleTime = 5f;
 							remainingTime.now = Data.GetStageData (MainManager.Instance.stage).limitTime;
+							//MainManager.Instance.nendAdBanner.Hide ();
+							MainManager.Instance.bannerView.Hide ();
 						}
 						break;
 					case CONTINUE_COMMAND_YES:
 						{
-							MainManager.Instance.CurrentStage (0);
+							MainManager.Instance.CurrentStage (life.now, 0);
 						}
 						break;
 					case CONTINUE_COMMAND_NO:
@@ -2441,6 +2656,7 @@ public class GameManager : MonoBehaviour
 							player.SetImageCoefficient (Data.GetPlayerImageCoefficient (Hakaima.Terrain.Type.Soil));
 						}
 						if (player.state == Player.State.Wait) {
+							FirebaseAnalyticsManager.Instance.LogEvent (Data.FIREBASE_EVNET_FINISH_TUTORIAL);
 							pattern = 1;
 							time = 0;
 						}
@@ -2488,7 +2704,7 @@ public class GameManager : MonoBehaviour
 							goHelpArrowRight = goHelp.transform.Find ("ArrowRight").gameObject;
 							goHelpArrowLeft = goHelp.transform.Find ("ArrowLeft").gameObject;
 							goHelpArrowRight.GetComponent<Button> ().onClick.AddListener (() => OnHelpNextPage ());
-							goHelpArrowLeft	.GetComponent<Button> ().onClick.AddListener (() => OnHelpPrevPage ());
+							goHelpArrowLeft.GetComponent<Button> ().onClick.AddListener (() => OnHelpPrevPage ());
 
 							Destroy (goHelp.transform.Find ("Com").gameObject);
 							Destroy (goHelp.transform.Find ("Logo").gameObject);
@@ -2511,7 +2727,7 @@ public class GameManager : MonoBehaviour
 						goCover.GetComponent<Image> ().color = color;
 						if (color.a >= 1f) {
 							PlayerPrefs.SetInt (Data.RECORD_IS_TUTORIAL_FIRST_HELP, 1);
-							MainManager.Instance.NextStage (life.now);
+							MainManager.Instance.NextStage (life.now, myWeapon.now);
 							SetClearNextStage ();
 						}
 					}
@@ -2704,9 +2920,9 @@ public class GameManager : MonoBehaviour
 			}
 		}
 		{
-			for (int i = 0; i < weaponList.Count; i++) {
-				Weapon weapon = weaponList [i];
-				GroupWeapon groupWeapon = groupWeaponList [i];
+			for (int i = 0; i < playerWeaponList.Count; i++) {
+				Weapon weapon = playerWeaponList [i];
+				GroupWeapon groupWeapon = groupPlayerWeaponList [i];
 				if (groupWeapon.gameObject.activeSelf != weapon.visible) {
 					groupWeapon.gameObject.SetActive (weapon.visible);
 				}
@@ -2723,8 +2939,34 @@ public class GameManager : MonoBehaviour
 					if (groupWeapon.gameObjectImage.transform.localRotation.z != weapon.rotation) {
 						groupWeapon.gameObjectImage.transform.localRotation = Quaternion.Euler (new Vector3 (0, 0, weapon.rotation));
 					}
-					if (groupWeapon.gameObjectImage.GetComponent<Image> ().sprite != ResourceManager.Instance.spriteWeapon) {
-						groupWeapon.gameObjectImage.GetComponent<Image> ().sprite = ResourceManager.Instance.spriteWeapon;
+					if (groupWeapon.gameObjectImage.GetComponent<Image> ().sprite != ResourceManager.Instance.spritePlayerWeapon) {
+						groupWeapon.gameObjectImage.GetComponent<Image> ().sprite = ResourceManager.Instance.spritePlayerWeapon;
+					}
+				}
+			}
+		}
+		{
+			for (int i = 0; i < enemyWeaponList.Count; i++) {
+				Weapon weapon = enemyWeaponList [i];
+				GroupWeapon groupWeapon = groupEnemyWeaponList [i];
+				if (groupWeapon.gameObject.activeSelf != weapon.visible) {
+					groupWeapon.gameObject.SetActive (weapon.visible);
+				}
+				if (weapon.visible) {
+					if (groupWeapon.gameObject.transform.parent != goLayerList [weapon.layer].transform) {
+						groupWeapon.gameObject.transform.SetParent (goLayerList [weapon.layer].transform);
+					}
+					if (groupWeapon.gameObject.transform.localPosition.x != weapon.positionX || groupWeapon.gameObject.transform.localPosition.y != weapon.positionY) {
+						groupWeapon.gameObject.transform.localPosition = new Vector3 (weapon.positionX, weapon.positionY);
+					}
+					if (groupWeapon.gameObjectImage.transform.localScale.x != weapon.scaleX || groupWeapon.gameObjectImage.transform.localScale.y != weapon.scaleY) {
+						groupWeapon.gameObjectImage.transform.localScale = new Vector3 (weapon.scaleX, weapon.scaleY);
+					}
+					if (groupWeapon.gameObjectImage.transform.localRotation.z != weapon.rotation) {
+						groupWeapon.gameObjectImage.transform.localRotation = Quaternion.Euler (new Vector3 (0, 0, weapon.rotation));
+					}
+					if (groupWeapon.gameObjectImage.GetComponent<Image> ().sprite != ResourceManager.Instance.spriteEnemyWeapon) {
+						groupWeapon.gameObjectImage.GetComponent<Image> ().sprite = ResourceManager.Instance.spriteEnemyWeapon;
 					}
 				}
 			}
@@ -2785,6 +3027,39 @@ public class GameManager : MonoBehaviour
 					}
 					if (groupLight.gameObject.transform.localPosition.x != light.positionX || groupLight.gameObject.transform.localPosition.y != light.positionY) {
 						groupLight.gameObject.transform.localPosition = new Vector3 (light.positionX, light.positionY);
+					}
+				}
+			}
+		}
+		{
+			for (int i = 0; i < specialItemList.Count; i++) {
+				Item item = specialItemList [i];
+				GroupItem groupItem = groupSpecialItemList [i];
+				if (groupItem.gameObject.activeSelf != item.visible) {
+					groupItem.gameObject.SetActive (item.visible);
+				}
+				if (item.visible) {
+					if (groupItem.gameObject.transform.parent != goLayerList [item.layer].transform) {
+						groupItem.gameObject.transform.SetParent (goLayerList [item.layer].transform);
+					}
+					if (groupItem.gameObject.transform.localPosition.x != item.positionX || groupItem.gameObject.transform.localPosition.y != item.positionY) {
+						groupItem.gameObject.transform.localPosition = new Vector3 (item.positionX, item.positionY);
+					}
+					switch (item.type) {
+					case Item.Type.Ticket:
+						{
+							if (groupItem.gameObject.GetComponent<Image> ().sprite != ResourceManager.Instance.spriteItemList [(int)item.type * ResourceManager.SPRITE_MULTI_TYPE]) {
+								groupItem.gameObject.GetComponent<Image> ().sprite = ResourceManager.Instance.spriteItemList [(int)item.type * ResourceManager.SPRITE_MULTI_TYPE];
+							}
+						}
+						break;
+					case Item.Type.Weapon:
+						{
+							if (groupItem.gameObject.GetComponent<Image> ().sprite != ResourceManager.Instance.spritePlayerWeapon) {
+								groupItem.gameObject.GetComponent<Image> ().sprite = ResourceManager.Instance.spritePlayerWeapon;
+							}
+						}
+						break;
 					}
 				}
 			}
@@ -2864,6 +3139,10 @@ public class GameManager : MonoBehaviour
 				goLife.GetComponent<Text> ().text = string.Format ("{0:00}", life.now).ToString ();
 				life.pre = life.now;
 			}
+			if (myWeapon.now != myWeapon.pre) {
+				goMyWeapon.GetComponent<Text> ().text = string.Format ("{0:00}", myWeapon.now).ToString ();
+				myWeapon.pre = myWeapon.now;
+			}
 			if (remainingTime.now != remainingTime.pre) {
 				TimeSpan span = TimeSpan.FromSeconds (remainingTime.now);
 				goRemainingTime.GetComponent<Text> ().text = string.Format ("{0:00}:{1:00}:{2}", span.Minutes, span.Seconds, span.Milliseconds.ToString ("000").Substring (0, 2));
@@ -2875,10 +3154,26 @@ public class GameManager : MonoBehaviour
 		switch (state) {
 		case State.Ready:
 		case State.ReadyContinue:
-		{
+			{
 				if (collectReady.go.activeSelf) {
 					if (collectReady.go.GetComponent<Image> ().color != collectReady.color) {
 						collectReady.go.GetComponent<Image> ().color = collectReady.color;
+					}
+					bool active = collectReady.color.a >= 0.5f;
+					if (collectReady.goStage.GetComponent<Text> ().enabled != active) {
+						collectReady.goStage.GetComponent<Text> ().enabled = active;
+					}
+					if (collectReady.goDescription.GetComponent<Text> ().enabled != active) {
+						collectReady.goDescription.GetComponent<Text> ().enabled = active;
+					}
+					if (collectReady.goClear.GetComponent<Text> ().enabled != active) {
+						collectReady.goClear.GetComponent<Text> ().enabled = active;
+					}
+					if (collectReady.goReady.GetComponent<Text> ().enabled != active) {
+						collectReady.goReady.GetComponent<Text> ().enabled = active;
+					}
+					if (collectReady.goGo.GetComponent<Text> ().enabled != active) {
+						collectReady.goGo.GetComponent<Text> ().enabled = active;
 					}
 				}
 			}
@@ -2976,6 +3271,7 @@ public class GameManager : MonoBehaviour
 				//MainManager.Instance.nendAdBanner.Show ();
 				MainManager.Instance.bannerView.Show ();
 				SoundManager.Instance.PlaySe (SoundManager.SeName.SE_OK);
+				FirebaseAnalyticsManager.Instance.LogEvent (Data.FIREBASE_SCREEN_PUASE);
 			} else {
 				//MainManager.Instance.nendAdBanner.Hide ();
 				MainManager.Instance.bannerView.Hide ();
@@ -2990,21 +3286,41 @@ public class GameManager : MonoBehaviour
 	{
 		MainManager.Instance.ShowInterstitial (() => {
 			life.now += 5;
+			FirebaseAnalyticsManager.Instance.LogEvent (Data.FIREBASE_EVENT_PAUSE_ADS);
 		});
+	}
+
+
+
+	private void OnPauseEnd ()
+	{
+		if (state == State.Play) {
+			// 武器半分(2以上保持時).
+			if (myWeapon.now > 1)
+				myWeapon.now /= 2;
+			SoundManager.Instance.StopSe ();
+			SoundManager.Instance.PlaySe (SoundManager.SeName.SE_CANCEL);
+			//MainManager.Instance.nendAdBanner.Hide ();
+			MainManager.Instance.bannerView.Hide ();
+			MainManager.Instance.Title ();
+		}
 	}
 
 
 
 	private Player.Compass checkCompass;
 	private Vector2 checkPosition;
-	private float checkHoleTime;
+	private Coroutine coroutine;
+	private bool canThrough;
+	private bool isDigged;
 
 	private void OnTouchPointerDown (PointerEventData eventData)
 	{
 		if (MainManager.Instance.isTutorial) {
 			if (PlayerPrefs.GetInt (Data.RECORD_IS_TUTORIAL_FIRST_HELP) == 1) {
-				MainManager.Instance.NextStage (life.now);
+				MainManager.Instance.NextStage (life.now, myWeapon.now);
 				SetClearNextStage ();
+				FirebaseAnalyticsManager.Instance.LogEvent (Data.FIREBASE_EVNET_FINISH_TUTORIAL);
 			}
 		}
 
@@ -3029,10 +3345,7 @@ public class GameManager : MonoBehaviour
 
 				checkCompass = player.compass;
 				checkPosition = eventData.pressPosition;
-			
-				if (Time.time - checkHoleTime < 1.00f)
-					groupPlayer.canHoleCycle = true;
-				checkHoleTime = Time.time;
+				coroutine = StartCoroutine (SetCanHoleCycle ());
 			}
 			break;
 		case State.Clear:
@@ -3053,8 +3366,10 @@ public class GameManager : MonoBehaviour
 					if (isBoss) {
 						MainManager.Instance.StoryEpilogue ();
 					} else {
-						MainManager.Instance.NextStage (life.now);
+						MainManager.Instance.NextStage (life.now, myWeapon.now);
 					}
+
+					LifeUpForAds();
 					SetClearNextStage ();
 				}
 			}
@@ -3064,13 +3379,29 @@ public class GameManager : MonoBehaviour
 
 
 
+	private IEnumerator SetCanHoleCycle ()
+	{
+		yield return new WaitForSeconds (0.2f);
+
+		groupPlayer.canHoleCycle = true;
+		isDigged = true;
+	}
+
+
+
 	private void OnTouchPointerUp (PointerEventData eventData)
 	{
 		if (state == State.Play) {
 			isTouch = false;
+			if (isDigged)
+				canThrough = false;
+			isDigged = false;
 
 			if (playerNextCommand == PLAYER_NEXT_COMMAND_NONE)
 				isCommandNoneClick = true;
+
+			if (coroutine != null)
+				StopCoroutine (coroutine);
 		}
 
 		goTrail.GetComponent<TrailRenderer> ().material.color = Color.white;
@@ -3115,6 +3446,8 @@ public class GameManager : MonoBehaviour
 				}
 				if (playerNextCommand == PLAYER_NEXT_COMMAND_COMPASS) {
 					if (movePosition.magnitude >= Data.EVENT_MOVE_MAGNITUDE_COMPASS) {
+						if (playerNextCompass != checkCompass)
+							groupPlayer.canHoleCycle = false;
 						playerNextCompass = checkCompass;
 					}
 					if (movePosition.magnitude >= Data.EVENT_MOVE_MAGNITUDE_COMPASS_WALK) {
@@ -3127,8 +3460,6 @@ public class GameManager : MonoBehaviour
 						playerNextCompass = checkCompass;
 					}
 				}
-
-				groupPlayer.canHoleCycle = false;
 			}
 			break;
 		case State.TutorialHelp:
@@ -3161,6 +3492,9 @@ public class GameManager : MonoBehaviour
 	private void OnContinue (int type)
 	{
 		if (state == State.Continue) {
+			// 武器半分(2以上保持時).
+			if (myWeapon.now > 1)
+				myWeapon.now /= 2;
 			continueCommand = type;
 			SoundManager.Instance.StopSe ();
 			SoundManager.Instance.PlaySe (type != CONTINUE_COMMAND_NO ? SoundManager.SeName.SE_OK : SoundManager.SeName.SE_CANCEL);
@@ -3175,6 +3509,8 @@ public class GameManager : MonoBehaviour
 	{
 		MainManager.Instance.ShowInterstitial (() => {
 			life.now += 5;
+			continueCommand = CONTINUE_COMMAND_MOVIE;
+			MainManager.Instance.bannerView.Hide ();
 		});
 	}
 
@@ -3987,4 +4323,40 @@ public class GameManager : MonoBehaviour
 		transform.Find ("UI/Debug/Damage/Text").GetComponent<Text> ().text = string.Format ("敵当\n{0}", isDebugDamage ? "ON" : "OFF");
 	}
 
+
+	private void OnTwitter ()
+	{
+		// Add 2017.11.7
+		#if UNITY_ANDROID
+		FirebaseAnalyticsManager.Instance.LogEvent (Data.FIREBASE_EVENT_TWITTER);
+		SocialConnector.SocialConnector.Share (Language.sentence [Language.TWITTER], Data.URL, null);
+		#elif UNITY_IOS
+		FirebaseAnalyticsManager.Instance.LogEvent (Data.FIREBASE_EVENT_TWITTER);
+		SocialConnector.SocialConnector.Share (Language.sentence [Language.TWITTER], Data.URL_IOS, null);
+		#endif
+	}
+
+	// バナーが出たらガチャチケット１枚.
+	private bool ShowAdsBanner(int n)
+	{
+		/*int randNum = (MainManager.Instance.stage >= 5) ? n * 2 : n;
+		bool flag = false;
+		UnityEngine.Random.InitState ((int)Time.time);
+		if (UnityEngine.Random.Range (0, 100) < randNum) {
+			MainManager.Instance.ShowInterstitialNoMovie ();
+		}
+		return flag;
+		*/
+		MainManager.Instance.ShowInterstitialNoMovie ();
+		return true;
+	}
+
+	private void LifeUpForAds()
+	{
+		if (MainManager.Instance.isInterstitialClose) {
+			life.now++;
+			SoundManager.Instance.PlaySe (SoundManager.SeName.JINGLE_1UP);
+			MainManager.Instance.isInterstitialClose = false;
+		}
+	}
 }
