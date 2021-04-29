@@ -142,7 +142,7 @@ public class Data
 	public const int LAYER_10							= 10;
 	public const int LAYER_11							= 11;
 
-	public const int PLAYER_START_POINT_X				= 4;
+	public const int PLAYER_START_POINT_X				= 8;
 	public const int PLAYER_START_POINT_Y				= 0;
 
 	public const int ENEMY_PATTERN_NORMAL				= 20;
