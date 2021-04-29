@@ -108,12 +108,12 @@ public class Data
 	public const int TARGET_FRAME_RATE					= 60;
 	public const float DELTA_TIME						= 1f/60;
 
-	public const int SCREEN_WIDTH						= 1080;
-	public const int SCREEN_HEIGHT						= 1920;
+	public const int SCREEN_WIDTH						= 1920;
+	public const int SCREEN_HEIGHT						= 1080;
 	public const int SCREEN_RESOLUTION					= 1024;
 
-	public const int LENGTH_X							= 10;
-	public const int LENGTH_Y							= 17;
+	public const int LENGTH_X							= 18;
+	public const int LENGTH_Y							= 8;
 
 	public const float SIZE_CHIP						= 96;
 	public const float SPEED_0							= 0;

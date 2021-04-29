@@ -3,7 +3,6 @@ using UnityEngine.UI;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.Advertisements;
-using UnityEngine.Analytics;
 using System.Collections;
 using System.Collections.Generic;
 using System;
@@ -969,11 +968,11 @@ public class GameManager : MonoBehaviour
 		}
 
 		if (MainManager.Instance.isTutorial) {
-			Analytics.CustomEvent ("tutorial", new Dictionary<string, object> {
+			UnityEngine.Analytics.Analytics.CustomEvent ("tutorial", new Dictionary<string, object> {
 				{"done", true},
 			});
 		} else {
-			Analytics.CustomEvent ("stage_start", new Dictionary<string, object> {
+			UnityEngine.Analytics.Analytics.CustomEvent ("stage_start", new Dictionary<string, object> {
 				{"stage_" + (MainManager.Instance.stage + 1), true},
 			});
 		}
@@ -3036,7 +3035,7 @@ public class GameManager : MonoBehaviour
 					pattern = 10;
 					time = 0;
 				} else if (pattern == 11) {
-					Analytics.CustomEvent ("stage_clear", new Dictionary<string, object> {
+					UnityEngine.Analytics.Analytics.CustomEvent ("stage_clear", new Dictionary<string, object> {
 						{"stage_" + (MainManager.Instance.stage + 1), true},
 					});
 
