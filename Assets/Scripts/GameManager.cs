@@ -432,7 +432,7 @@ public class GameManager : MonoBehaviour
 		public GameObject goEnemyScore;
 		public GameObject goTime;
 		public GameObject goTimeScore;
-		public GameObject goBonus;
+		public GameObject goBonusScore;
 		public Dictionary<int, GameObject> goBonusScoreList;
 		public GameObject goRule;
 		public GameObject goTotal;
@@ -440,12 +440,14 @@ public class GameManager : MonoBehaviour
 		public GameObject goNextStage;
 		public GameObject goPlayer;
 		public Vector3 positionTitle;
+		public Vector3 startPositionTitle;
+		public Vector3 aimPositionTitle;
 		public Color color;
 		public Color colorEnemy;
 		public Color colorEnemyScore;
 		public Color colorTime;
 		public Color colorTimeScore;
-		public Color colorBonus;
+		public Color colorBonusScore;
 		public Dictionary<int, Color> colorBonusScoreList;
 		public Color colorRule;
 		public Color colorTotal;
@@ -692,7 +694,7 @@ public class GameManager : MonoBehaviour
 		collectClear.goEnemyScore		= collectClear.go.transform.Find ("EnemyScore").gameObject;
 		collectClear.goTime				= collectClear.go.transform.Find ("Time").gameObject;
 		collectClear.goTimeScore		= collectClear.go.transform.Find ("TimeScore").gameObject;
-		collectClear.goBonus			= collectClear.go.transform.Find ("Bonus").gameObject;
+		collectClear.goBonusScore		= collectClear.go.transform.Find ("BonusScore").gameObject;
 		collectClear.goRule				= collectClear.go.transform.Find ("Rule").gameObject;
 		collectClear.goTotal			= collectClear.go.transform.Find ("Total").gameObject;
 		collectClear.goTotalScore		= collectClear.go.transform.Find ("TotalScore").gameObject;
@@ -2206,8 +2208,8 @@ public class GameManager : MonoBehaviour
 						if (pattern == 0) {
 							if (time == 0) {
 								collectClear.go.SetActive (true);
-								collectClear.goBonus.SetActive (!score.bonusList.ToList ().TrueForAll (obj => obj.Value == 0));
 								int pos = 0;
+								int scoreValue = 0;
 								foreach (Bonus.Type type in Enum.GetValues (typeof(Bonus.Type))) {
 									if (type == Bonus.Type.None)
 										continue;
@@ -2215,14 +2217,14 @@ public class GameManager : MonoBehaviour
 										collectClear.goBonusScoreList [(int)type].SetActive (false);
 										continue;
 									}
-									collectClear.goBonusScoreList [(int)type].transform.localPosition = new Vector3 (0, -20 - 80 * pos);
+									collectClear.goBonusScoreList [(int)type].SetActive (true);
 									pos++;
+									scoreValue += score.bonusList[(int)type];
 								}
-								collectClear.positionTitle = Vector3.zero;
-								collectClear.goRule.transform.localPosition = new Vector3 (0, -40 - 80 * pos);
-								collectClear.goTotal.transform.localPosition = collectClear.goRule.transform.localPosition + new Vector3 (0, -100);
-								collectClear.goTotalScore.transform.localPosition = collectClear.goTotal.transform.localPosition;
-								collectClear.goNextStage.transform.localPosition = collectClear.goTotal.transform.localPosition + new Vector3 (0, -180);
+								collectClear.aimPositionTitle = collectClear.goTitle.transform.localPosition;
+								collectClear.startPositionTitle = collectClear.aimPositionTitle - new Vector3(0, 200);
+								collectClear.positionTitle = collectClear.startPositionTitle;
+								collectClear.goBonusScore.GetComponent<Text> ().text = scoreValue.ToString ();
 								collectClear.goNextStage.GetComponent<Text> ().text = groupEnemyList.Exists (obj => obj.isBoss) ? "GO TO THE PRINCESS" : "NEXT STAGE";
 
 								Color color = Color.white;
@@ -2231,7 +2233,7 @@ public class GameManager : MonoBehaviour
 								collectClear.colorEnemyScore = color;
 								collectClear.colorTime = color;
 								collectClear.colorTimeScore = color;
-								collectClear.colorBonus = color;
+								collectClear.colorBonusScore = color;
 								collectClear.colorRule = color;
 								collectClear.colorTotal = color;
 								collectClear.colorTotalScore = color;
@@ -2241,7 +2243,7 @@ public class GameManager : MonoBehaviour
 										continue;
 									collectClear.colorBonusScoreList [(int)type] = color;
 								}
-								collectClear.player.Init (-700, -700, Data.SPEED_16);
+								collectClear.player.Init (-1200, -300, Data.SPEED_16);
 
 								PlayerPrefs.SetInt (Data.RECORD_CLEAR + MainManager.Instance.stage, 1);
 								PlayerPrefs.SetFloat (Data.RECORD_CLEAR_TIME + MainManager.Instance.stage, Mathf.Max (remainingTime.now, PlayerPrefs.GetInt (Data.RECORD_CLEAR_TIME + MainManager.Instance.stage)));
@@ -2250,7 +2252,8 @@ public class GameManager : MonoBehaviour
 								float aimTime = 2;
 								float value = 1 / (aimTime - 1) * time - 1;
 								value = Mathf.Min (value, 1);
-								collectClear.positionTitle = new Vector3 (0, -500 * value * (value - 2));
+								Vector3 movePosition = collectClear.aimPositionTitle - collectClear.startPositionTitle;
+								collectClear.positionTitle = collectClear.startPositionTitle + new Vector3 (0, -movePosition.y * value * (value - 2));
 								collectClear.color = Color.black;
 								collectClear.color.a = Mathf.Lerp (0, collectClear.colorAlphaMax, value);
 								if (time >= aimTime) {
@@ -2313,11 +2316,11 @@ public class GameManager : MonoBehaviour
 							}
 							if (collectClear.bonusIndex <= (int)Bonus.Type.Bonus6) {
 								Color color = Color.white;
-								color.a = Mathf.Lerp (0, 1, 2 * time);
-								if (collectClear.colorBonus.a < color.a)
-									collectClear.colorBonus = color;
+								color.a = Mathf.Lerp (0, 1, 4 * time);
+								if (collectClear.colorBonusScore.a < color.a)
+									collectClear.colorBonusScore = color;
 								collectClear.colorBonusScoreList [collectClear.bonusIndex] = color;
-								if (time >= 0.5f) {
+								if (time >= 0.25f) {
 									time = 0;
 									collectClear.bonusIndex++;
 									loop2 = true;
@@ -2353,7 +2356,7 @@ public class GameManager : MonoBehaviour
 								collectClear.colorEnemyScore = color;
 								collectClear.colorTime = color;
 								collectClear.colorTimeScore = color;
-								collectClear.colorBonus = color;
+								collectClear.colorBonusScore = color;
 								collectClear.colorRule = color;
 								collectClear.colorTotal = color;
 								collectClear.colorTotalScore = color;
@@ -2378,7 +2381,7 @@ public class GameManager : MonoBehaviour
 							color.a = ((int)(time * 2) % 5 == 4) ? 0 : 1;
 							collectClear.colorNextStage = color;
 
-							if (collectClear.player.positionX < 700)
+							if (collectClear.player.positionX < 1200)
 								collectClear.player.Move (Data.DELTA_TIME, Data.TARGET_FRAME_RATE);
 						}
 					} while (loop2);
@@ -2903,8 +2906,8 @@ public class GameManager : MonoBehaviour
 					if (collectClear.goTimeScore.GetComponent<Text> ().text != score.timebonus.ToString ()) {
 						collectClear.goTimeScore.GetComponent<Text> ().text = score.timebonus.ToString ();
 					}
-					if (collectClear.goBonus.GetComponent<Text> ().color != collectClear.colorBonus) {
-						collectClear.goBonus.GetComponent<Text> ().color = collectClear.colorBonus;
+					if (collectClear.goBonusScore.GetComponent<Text> ().color != collectClear.colorBonusScore) {
+						collectClear.goBonusScore.GetComponent<Text> ().color = collectClear.colorBonusScore;
 					}
 					if (collectClear.goRule.GetComponent<Image> ().color != collectClear.colorRule) {
 						collectClear.goRule.GetComponent<Image> ().color = collectClear.colorRule;
@@ -2924,12 +2927,8 @@ public class GameManager : MonoBehaviour
 					foreach (Bonus.Type type in Enum.GetValues (typeof(Bonus.Type))) {
 						if (type == Bonus.Type.None)
 							continue;
-						if (collectClear.goBonusScoreList [(int)type].GetComponent<Text> ().color != collectClear.colorBonusScoreList [(int)type]) {
-							collectClear.goBonusScoreList [(int)type].GetComponent<Text> ().color = collectClear.colorBonusScoreList [(int)type];
-							collectClear.goBonusScoreList [(int)type].transform.Find ("Image").GetComponent<Image> ().color = collectClear.colorBonusScoreList [(int)type];
-						}
-						if (collectClear.goBonusScoreList [(int)type].GetComponent<Text> ().text != score.bonusList [(int)type].ToString ()) {
-							collectClear.goBonusScoreList [(int)type].GetComponent<Text> ().text = score.bonusList [(int)type].ToString ();
+						if (collectClear.goBonusScoreList [(int)type].GetComponent<Image> ().color != collectClear.colorBonusScoreList [(int)type]) {
+							collectClear.goBonusScoreList [(int)type].GetComponent<Image> ().color = collectClear.colorBonusScoreList [(int)type];
 						}
 					}
 					if (collectClear.goPlayer.transform.localPosition.x != collectClear.player.positionX || collectClear.goPlayer.transform.localPosition.y != collectClear.player.positionY) {
