@@ -181,7 +181,7 @@ public class TitleManager : MonoBehaviour
 
 			int distance = UnityEngine.Random.value * 2 < 1 ? 1 : -1;
 			this.positionX = -this.sidePositionX * distance;
-			this.positionY = 0 + UnityEngine.Random.value * 600;
+			this.positionY = -200 + UnityEngine.Random.value * 400;
 			this.scaleX = distance;
 			this.scaleY = 1;
 			this.speedX = 4 * distance;
@@ -457,7 +457,7 @@ public class TitleManager : MonoBehaviour
 
 				time = 0;
 				birdIndex = 0;
-				bird.Init (800);
+				bird.Init (1100);
 				
 				//if (MainManager.Instance.isAdvertise)
 				//	MainManager.Instance.nendAdIcon.Show ();
