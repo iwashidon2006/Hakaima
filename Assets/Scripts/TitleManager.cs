@@ -16,7 +16,6 @@ public class TitleManager : MonoBehaviour
 	public enum State
 	{
 		Menu,
-		Ranking,
 		Record,
 		Help,
 		End,
@@ -214,111 +213,6 @@ public class TitleManager : MonoBehaviour
 	}
 
 
-
-	private class Ranking
-	{
-		public enum State
-		{
-			Fetch,		// サーバーからハイスコアを取得.
-			Save,		// サーバーにハイスコアを保存.
-			Goto,		// サーバーからTop10を取得へ.
-			FetchRank,	// 現プレイヤーのハイスコアを受けとってランクを取得.
-			TopRank,	// サーバーからTop10を取得.
-			Finish,		// 処理終了.
-		}
-
-		public State state { get; set; }
-		private NCMB.HighScore hiscore;
-		private LeaderBoard leaderBoard;
-
-		public void Init()
-		{
-			if (leaderBoard == null) {
-				leaderBoard = new LeaderBoard ();
-			}
-			if (hiscore == null) {
-				hiscore = new NCMB.HighScore (0, 0, "");
-			}
-			state = State.Fetch;
-
-			if (hiscore != null) {
-				hiscore.isCorrect = false;
-				hiscore.isCorrectFinish = false;
-			}
-		}
-
-		public void Fetch(string name)
-		{
-			if (!hiscore.isCorrect) {
-				hiscore = new NCMB.HighScore (0, 0, name);
-				hiscore.fetch ();
-			}
-		}
-
-		public void Save(int score, int stage)
-		{
-			if (!hiscore.isCorrect) {
-				if (hiscore.score < score) {
-					hiscore.score = score;
-					hiscore.stage = stage;
-					hiscore.save ();
-				} else {
-					hiscore.isCorrectFinish = true;
-				}
-			}
-		}
-
-		public void FetchRank()
-		{
-			if (!leaderBoard.isCorrect) {
-				leaderBoard.fetchRank (hiscore.score);
-			}
-		}
-
-		public void FetchTopRank()
-		{
-			if (!leaderBoard.isCorrect) {
-				leaderBoard.fetchTopRankers ();
-			}
-		}
-
-		public void Next(State state)
-		{
-			if (hiscore.isCorrectFinish) {
-				this.state = state;
-				hiscore.isCorrect = false;
-				hiscore.isCorrectFinish = false;
-			}
-		}
-
-		public void NextLeaderBoard(State state)
-		{
-			if (leaderBoard.isfetchRankFinish) {
-				this.state = state;
-				leaderBoard.isCorrect = false;
-				leaderBoard.isfetchRankFinish = false;
-			}
-			if (leaderBoard.isfetchTopRankersFinish) {
-				if (leaderBoard.currentRank > 0 ) {
-					MainManager.Instance.loginInfo.SetMyRankInfo(leaderBoard.currentRank, leaderBoard.topRankers[leaderBoard.currentRank-1].score);
-					for(int i = 0; i < leaderBoard.topRankers.Count; i++ )
-					{
-						MainManager.Instance.loginInfo.SetUserName(leaderBoard.topRankers [i].name);
-						MainManager.Instance.loginInfo.SetUserScore(leaderBoard.topRankers [i].score);
-					}
-				}
-				this.state = state;
-				leaderBoard.isCorrect = false;
-				leaderBoard.isfetchTopRankersFinish = false;
-			}
-		}
-
-		public void debug()
-		{
-			//Debug.Log ("score = " + hiscore.score + ", stage = " + hiscore.stage+", name = "+hiscore.name+", rank = "+leaderBoard.currentRank);
-		}
-	}
-
 	public const int RANKING_PAGE_NUM = 2;
 	public const int RECORD_PAGE_NUM = 3;
 	public const int HELP_PAGE_NUM = 9;
@@ -327,7 +221,6 @@ public class TitleManager : MonoBehaviour
 	private float time;
 
 	private GameObject goMenu;
-	private GameObject goRanking;
 	private GameObject goRecord;
 	private GameObject goHelp;
 	private GameObject goEnd;
@@ -338,7 +231,6 @@ public class TitleManager : MonoBehaviour
 	private GameObject goMenuLogo;
 	private GameObject goMenuButtonStart;
 	private GameObject goMenuButtonContinue;
-	private GameObject goMenuButtonRanking;
 	private GameObject goMenuButtonRecord;
 	private GameObject goMenuButtonHelp;
 	private GameObject goMenuButtonExtra;
@@ -349,24 +241,6 @@ public class TitleManager : MonoBehaviour
 	private GameObject goMenuVolumeOff;
 	private GameObject goMenuBird;
 	private GameObject goMenuTwitter;
-
-	private GameObject goRankingMe;
-	private GameObject goRankingPage;
-	private GameObject goRankingConnecting;
-	private GameObject goRankingPoint;
-	private GameObject goRankingSwipe;
-	private GameObject goRankingArrowRight;
-	private GameObject goRankingArrowLeft;
-	private GameObject goRankingButtonLogout;
-	private GameObject goRankingButtonBack;
-
-	private GameObject goLogin;
-	private GameObject goSignup;
-	private GameObject goLoginButton;
-	private GameObject goSignupButton;
-	private GameObject goRegistButton;
-	private GameObject goLoginDescription;
-	private GameObject goSignupDescription;
 
 	private GameObject goRecordPage;
 	private GameObject goRecordPoint;
@@ -407,8 +281,6 @@ public class TitleManager : MonoBehaviour
 	private Catalog catalog;
 	private Bird bird;
 	private Cover cover;
-	private UserAuth user;
-	private Ranking ranking;
 
 	private float birdIndex;
 
@@ -451,7 +323,6 @@ public class TitleManager : MonoBehaviour
 		string path = Application.systemLanguage == SystemLanguage.Japanese ? Data.HELP_PATH_JAPANESE : Data.HELP_PATH_ENGLISH;
 
 		goMenu							= transform.Find ("UI/Menu").gameObject;
-		goRanking						= transform.Find ("UI/Ranking").gameObject;
 		goRecord						= transform.Find ("UI/Record").gameObject;
 		goHelp							= Instantiate (Resources.Load<GameObject> (path));
 		goHelp							.transform.SetParent (transform.Find ("UI"));
@@ -463,7 +334,6 @@ public class TitleManager : MonoBehaviour
 		goMenuLogo						= goMenu.transform.Find ("Logo").gameObject;
 		goMenuButtonStart				= goMenu.transform.Find ("ButtonStart").gameObject;
 		goMenuButtonContinue			= goMenu.transform.Find ("ButtonContinue").gameObject;
-		goMenuButtonRanking				= goMenu.transform.Find ("ButtonRanking").gameObject;
 		goMenuButtonRecord				= goMenu.transform.Find ("ButtonRecord").gameObject;
 		goMenuButtonHelp				= goMenu.transform.Find ("ButtonHelp").gameObject;
 		goMenuButtonExtra				= goMenu.transform.Find ("ButtonExtra").gameObject;
@@ -474,24 +344,6 @@ public class TitleManager : MonoBehaviour
 		goMenuVolumeOff					= goMenu.transform.Find ("Volume/Off").gameObject;
 		goMenuBird						= goMenu.transform.Find ("Bird").gameObject;
 		goMenuTwitter					= goMenu.transform.Find ("Twitter").gameObject;
-
-		goRankingMe						= goRanking.transform.Find ("Me").gameObject;
-		goRankingPage					= goRanking.transform.Find ("Page").gameObject;
-		goRankingConnecting				= goRanking.transform.Find ("Connecting").gameObject;
-		goRankingPoint					= goRanking.transform.Find ("Point").gameObject;
-		goRankingSwipe					= goRanking.transform.Find ("Swipe").gameObject;
-		goRankingArrowRight				= goRanking.transform.Find ("ArrowRight").gameObject;
-		goRankingArrowLeft				= goRanking.transform.Find ("ArrowLeft").gameObject;
-		goRankingButtonBack				= goRanking.transform.Find ("ButtonBack").gameObject;
-		goRankingButtonLogout			= goRanking.transform.Find ("ButtonLogout").gameObject;
-
-		goLogin							= goRanking.transform.Find ("Login").gameObject;
-		goSignup						= goRanking.transform.Find ("Signup").gameObject;
-		goLoginButton					= goLogin.transform.Find ("ButtonLogin").gameObject;
-		goSignupButton					= goLogin.transform.Find ("ButtonSignup").gameObject;
-		goRegistButton					= goSignup.transform.Find ("ButtonRegist").gameObject;
-		goLoginDescription				= goLogin.transform.Find ("Description").gameObject;
-		goSignupDescription				= goSignup.transform.Find ("Description").gameObject;
 
 		goRecordPage					= goRecord.transform.Find ("Page").gameObject;
 		goRecordPoint					= goRecord.transform.Find ("Point").gameObject;
@@ -536,7 +388,6 @@ public class TitleManager : MonoBehaviour
 			goMenuButtonStart			.GetComponent<Button> ().onClick.AddListener (() => OnMenuButtonCaution (true));
 		}
 		goMenuButtonContinue			.GetComponent<Button> ().onClick.AddListener (() => OnMenuButtonContinue ());
-		goMenuButtonRanking				.GetComponent<Button> ().onClick.AddListener (() => OnButton (State.Ranking));
 		goMenuButtonRecord				.GetComponent<Button> ().onClick.AddListener (() => OnButton (State.Record));
 		goMenuButtonHelp				.GetComponent<Button> ().onClick.AddListener (() => OnButton (State.Help));
 		goMenuButtonExtra				.GetComponent<Button> ().onClick.AddListener (() => OnButton (State.Extra));
@@ -546,14 +397,6 @@ public class TitleManager : MonoBehaviour
 		goMenuVolumeOff					.GetComponent<Button> ().onClick.AddListener (() => OnVolume (false));
 		goMenuTwitter					.GetComponent<Button> ().onClick.AddListener (() => OnTwitter ());
 
-		goLoginButton					.GetComponent<Button> ().onClick.AddListener (() => OnLogin ());
-		goSignupButton					.GetComponent<Button> ().onClick.AddListener (() => OnSignup ());
-		goRegistButton					.GetComponent<Button> ().onClick.AddListener (() => OnRegist ());
-		goRankingButtonBack				.GetComponent<Button> ().onClick.AddListener (() => OnButton (State.Menu, false));
-		goRankingButtonLogout			.GetComponent<Button> ().onClick.AddListener (() => OnLogout ());
-		goRankingArrowRight				.GetComponent<Button> ().onClick.AddListener (() => OnCatalogNextPage ());
-		goRankingArrowLeft				.GetComponent<Button> ().onClick.AddListener (() => OnCatalogPrevPage ());
-
 		goRecordButtonBack				.GetComponent<Button> ().onClick.AddListener (() => OnButton (State.Menu, false));
 		goRecordArrowRight				.GetComponent<Button> ().onClick.AddListener (() => OnCatalogNextPage ());
 		goRecordArrowLeft				.GetComponent<Button> ().onClick.AddListener (() => OnCatalogPrevPage ());
@@ -561,7 +404,6 @@ public class TitleManager : MonoBehaviour
 		goHelpButtonBack				.GetComponent<Button> ().onClick.AddListener (() => OnButton (State.Menu, false));
 		goHelpArrowRight				.GetComponent<Button> ().onClick.AddListener (() => OnCatalogNextPage ());
 		goHelpArrowLeft					.GetComponent<Button> ().onClick.AddListener (() => OnCatalogPrevPage ());
-		goRankingSwipe					.GetComponent<EventTrigger> ().triggers.Find (obj => obj.eventID == EventTriggerType.Drag).callback.AddListener (eventData => OnSwipe ((PointerEventData)eventData));
 		goRecordSwipe					.GetComponent<EventTrigger> ().triggers.Find (obj => obj.eventID == EventTriggerType.Drag).callback.AddListener (eventData => OnSwipe ((PointerEventData)eventData));
 		goHelpSwipe						.GetComponent<EventTrigger> ().triggers.Find (obj => obj.eventID == EventTriggerType.Drag).callback.AddListener (eventData => OnSwipe ((PointerEventData)eventData));
 
@@ -586,8 +428,6 @@ public class TitleManager : MonoBehaviour
 		bird 	= new Bird ();
 		catalog = new Catalog ();
 		cover 	= new Cover ();
-		user 	= new UserAuth ();
-		ranking = new Ranking ();
 
 		SoundManager.Instance.PlaySe (SoundManager.SeName.JINGLE_TITLE);
 		OnVolume (PlayerPrefs.GetInt (Data.SOUND_MUTE) == 1);
@@ -602,10 +442,6 @@ public class TitleManager : MonoBehaviour
 		goConceal.SetActive (true);
 		goCover.SetActive (isCoverOnce);
 		isCoverOnce = false;
-
-		// ランキングアクセス時に毎回通信しないためにここで初期化。
-		// もし毎回させたい場合は、Create()の中で呼ぶ。
-		ranking.Init ();
 	}
 	
 	
@@ -614,7 +450,6 @@ public class TitleManager : MonoBehaviour
 	{
 		goMenu.SetActive (false);
 		goMenuCaution.SetActive (false);
-		goRanking.SetActive (false);
 		goRecord.SetActive (false);
 		goHelp.SetActive (false);
 		goEnd.SetActive (false);
@@ -634,107 +469,6 @@ public class TitleManager : MonoBehaviour
 				//if (MainManager.Instance.isAdvertise)
 				//	MainManager.Instance.nendAdIcon.Show ();
 				MainManager.Instance.bannerView.Show ();
-			}
-			break;
-		case State.Ranking:
-			{
-				goRanking.SetActive (true);
-				goLoginDescription.SetActive (false);
-				goSignupDescription.SetActive (false);
-				goRankingConnecting.SetActive (false);
-				goLogin.SetActive (false);
-				goSignup.SetActive (false);
-				goRankingMe.SetActive (false);
-				goRankingPage.SetActive (false);
-				goRankingPoint.SetActive (false);
-				goRankingSwipe.SetActive (false);
-				goRankingArrowLeft.SetActive (false);
-				goRankingArrowRight.SetActive (false);
-				goRankingButtonBack.SetActive (true);
-				goRankingButtonLogout.SetActive (false);
-				goLogin.transform.Find ("Id/TextId").GetComponent<Text> ().text = Language.sentence [Language.RANKING_NAME];
-				goLogin.transform.Find ("Password/TextPassword").GetComponent<Text> ().text = Language.sentence [Language.RANKING_PASSWORD];
-				goSignup.transform.Find ("Id/TextId").GetComponent<Text> ().text = Language.sentence [Language.RANKING_NAME];
-				goSignup.transform.Find ("Password/TextPassword").GetComponent<Text> ().text = Language.sentence [Language.RANKING_PASSWORD];
-				goSignup.transform.Find ("RePassword/TextPassword").GetComponent<Text> ().text = Language.sentence [Language.RANKING_PASSWORD_CONFIRM];
-				goSignup.transform.Find ("Id/InputField/Placeholder").GetComponent<Text> ().text = Language.sentence [Language.RANKING_NAME_FORM];
-				goSignup.transform.Find ("Password/InputField/Placeholder").GetComponent<Text> ().text = Language.sentence [Language.RANKING_PASSWORD_FORM];
-				
-				// 8/19 エラーの原因は、毎回TitleManagerを削除しているので、未ログイン扱いになってしまう、ゲーム終了後は毎回ランキングデータを持ってこないといけない
-				// もしくはローカルに保存してそれを表示する　こっちのほうが現実的
-
-				// 未ログイン
-				if (!MainManager.Instance.isLogin) {
-					goLogin.SetActive (true);
-					// 以前ログインしていればストレージから情報を得て自動ログイン
-					AutoLogin ();
-					// ログイン済み
-				} else {
-					string textRank = null;
-					string textName = null;
-					string textScore = null;
-
-					// No.1 - 10をセット
-					int max = MainManager.Instance.loginInfo.GetRankMax ();
-					int count = (max > (HighScore.RANKING_MAX >> 1)) ? HighScore.RANKING_MAX >> 1 : max;
-					for (int i = 0; i < count; i++) {
-						textRank += "No." + (i + 1) + "\n";
-						textName += MainManager.Instance.loginInfo.GetUserName (i) + "\n";
-						textScore += MainManager.Instance.loginInfo.GetUserScore (i) + "\n";
-					}
-
-					string text = null;
-					text = "My Rank.\n";
-					text += "No." + MainManager.Instance.loginInfo.GetRank () + " " + MainManager.Instance.loginInfo.GetName () + " " + MainManager.Instance.loginInfo.GetScore () + "点\n";
-
-					// 表示
-					goRankingMe.SetActive (true);
-					goRankingPage.SetActive (true);
-					goRankingButtonBack.SetActive (true);
-					goRankingButtonLogout.SetActive (true);
-					goRankingPage.transform.Find ("Page0/Rank").GetComponent<Text> ().text = textRank;
-					goRankingPage.transform.Find ("Page0/Name").GetComponent<Text> ().text = textName;
-					goRankingPage.transform.Find ("Page0/Score").GetComponent<Text> ().text = textScore;
-					goRanking.transform.Find ("Me").GetComponent<Text> ().text = text;
-					if (Language.sentence == Language.sentenceEn) {
-						goRankingPage.transform.Find ("Page0").GetComponent<RectTransform> ().sizeDelta = new Vector2 (925, 1000);
-					}
-
-					// No.11 - 20までをセット
-					count = max - (HighScore.RANKING_MAX >> 1);
-					if (count >= HighScore.RANKING_MAX >> 1)
-						count = HighScore.RANKING_MAX >> 1;
-					if (count > 0) {
-						textRank = null;
-						textName = null;
-						textScore = null;
-						// For debug.
-						/*for (int i = 0; i < 10; i++) {
-							textRank += "No."+(10+i+1)+"\n";
-							textName += "user name "+i+"\n";
-							textScore += ((i+1)*1000)+"\n";
-						}*/
-						for (int i = 0; i < count; i++) {
-							textRank += "No." + (10 + i + 1) + "\n";
-							textName += MainManager.Instance.loginInfo.GetUserName ((HighScore.RANKING_MAX >> 1) + i) + "\n";
-							textScore += MainManager.Instance.loginInfo.GetUserScore ((HighScore.RANKING_MAX >> 1) + i) + "\n";
-						}
-
-						goRankingPoint.SetActive (true);
-						goRankingSwipe.SetActive (true);
-						goRankingArrowLeft.SetActive (true);
-						goRankingArrowRight.SetActive (true);
-						goRankingPage.transform.Find ("Page1/Rank").GetComponent<Text> ().text = textRank;
-						goRankingPage.transform.Find ("Page1/Name").GetComponent<Text> ().text = textName;
-						goRankingPage.transform.Find ("Page1/Score").GetComponent<Text> ().text = textScore;
-						
-						catalog.Init (RANKING_PAGE_NUM);
-						goCatalogPage = goRankingPage;
-						goCatalogPoint = goRankingPoint;
-						goCatalogArrowRight = goRankingArrowRight;
-						goCatalogArrowLeft = goRankingArrowLeft;
-					}
-				}
 			}
 			break;
 		case State.Record:
@@ -836,23 +570,6 @@ public class TitleManager : MonoBehaviour
 				time += Time.deltaTime;
 			}
 			break;
-		case State.Ranking:
-			{
-				if (Logined()) {
-					MainManager.Instance.isDebug = true;
-					PlayerPrefs.SetString (Data.LOGIN_NAME, user.userName);
-					PlayerPrefs.SetString (Data.LOGIN_PASSWORD, user.password);
-					goRankingButtonBack.SetActive (true);
-					HighScoreData ();
-					RankingData ();
-				}
-
-				Connecting ();
-				if ( goRankingPoint.activeSelf ) {
-					catalog.Move (Data.DELTA_TIME, Data.TARGET_FRAME_RATE);
-				}
-			}
-			break;
 		case State.Record:
 		case State.Help:
 			{
@@ -890,22 +607,6 @@ public class TitleManager : MonoBehaviour
 					if (goMenuBird.GetComponent<Image> ().sprite != spriteBirdList [bird.imageIndex]) {
 						goMenuBird.GetComponent<Image> ().sprite = spriteBirdList [bird.imageIndex];
 					}
-				}
-			}
-			break;
-		case State.Ranking:
-			{
-				if ( goRankingPoint.activeSelf ) {
-					if (goCatalogPage.transform.localPosition.x != catalog.positionX) {
-						goCatalogPage.transform.localPosition = new Vector3 (catalog.positionX, goCatalogPage.transform.localPosition.y);
-					}
-					if (goCatalogArrowRight.activeSelf != catalog.isArrowRight) {
-						goCatalogArrowRight.SetActive (catalog.isArrowRight);
-					}
-					if (goCatalogArrowLeft.activeSelf != catalog.isArrowLeft) {
-						goCatalogArrowLeft.SetActive (catalog.isArrowLeft);
-					}
-					goCatalogPoint.transform.Find ("PointNow").localPosition = goCatalogPoint.transform.Find ("Point" + catalog.nowPageIndex).localPosition;
 				}
 			}
 			break;
@@ -1079,334 +780,6 @@ public class TitleManager : MonoBehaviour
 				OnButton (State.Menu, false);
 				break;
 			}
-		}
-	}
-
-
-	private void OnLogin()
-	{
-		string id = goLogin.transform.Find("Id/InputField/Text").GetComponent<Text>().text;
-		string password = goLogin.transform.Find("Password/InputField/Text").GetComponent<Text>().text;
-
-		//Debug mode.
-		//id = "Cookie";
-		//password = "1111";
-
-		bool flg = ErrorUserAuth(goLoginDescription, id, password);
-		if (flg) {
-			return;
-		}
-
-		ranking.Init ();
-		MainManager.Instance.loginInfo.Reset ();
-
-		SetConnecting (true);
-		user.logIn (id, password);
-	}
-	
-	
-	private void OnLogout()
-	{
-		SetPreparationLogout ();
-		user.logOut ();
-	}
-
-
-	private void OnSignup()
-	{
-		goSignup.SetActive (true);
-		goLogin.SetActive (false);
-
-		goSignup.transform.Find ("Description").gameObject.SetActive(false);
-	}
-
-
-	private void OnRegist()
-	{
-		string id = goSignup.transform.Find("Id/InputField/Text").GetComponent<Text>().text;
-		string password = goSignup.transform.Find("Password/InputField/Text").GetComponent<Text>().text;
-		string rePassword = goSignup.transform.Find("RePassword/InputField/Text").GetComponent<Text>().text;
-		string mail = null;	// No nessesary this time.
-
-		//Debug mode.
-		//id = "Cookie";
-		//password = "1111";
-		//rePassword = "1111";
-
-		bool flg = ErrorUserAuth(goSignupDescription, id, password, rePassword);
-		if (flg) {
-			return;
-		}
-
-		ranking.Init ();
-		MainManager.Instance.loginInfo.Reset ();
-
-		SetConnecting (false);
-		user.signUp (id, mail, password);
-	}
-
-	private bool isLogin;
-	private bool isLogout;
-	private bool isConnecting;
-	private void SetConnecting( bool isLogin )
-	{
-		this.isLogin = isLogin;
-		this.isLogout = false;
-		this.isConnecting = true;
-		goRankingConnecting.SetActive (true);
-		goRankingButtonBack.SetActive (false);
-		goLogin.SetActive (false);
-		goSignup.SetActive (false);
-		goRankingConnecting.GetComponent<Text> ().color = new Color (1, 1, 1, 1);
-		connectingText = Language.sentence [Language.CONNECTING];
-	}
-
-	private void SetPreparationLogout()
-	{
-		this.isLogin = false;
-		this.isLogout = true;
-		this.isConnecting = true;
-		goRankingConnecting.SetActive (true);
-		goRankingMe.SetActive(false);
-		goRankingPage.SetActive(false);
-		goRankingPoint.SetActive(false);
-		goRankingSwipe.SetActive(false);
-		goRankingArrowLeft.SetActive(false);
-		goRankingArrowRight.SetActive(false);
-		goRankingButtonLogout.SetActive(false);
-		goRankingButtonBack.SetActive (false);
-		goRankingConnecting.GetComponent<Text> ().color = new Color (1, 1, 1, 1);
-		connectingText = Language.sentence [Language.CONNECTING];
-	}
-
-
-	private void Connecting()
-	{
-		// 接続中...
-		if (goRankingConnecting.activeSelf) {
-			// エラーコードなし
-			if (user.errorCode == null) {
-				// 正常ログアウト
-				if (MainManager.Instance.isLogin == false && isLogout ) {
-					isConnecting = false;
-					this.isLogout = false;
-					goRankingConnecting.GetComponent<Text> ().text = Language.sentence [Language.LOGOUT];
-					goRankingButtonBack.SetActive (true);
-				}
-				// 未ログイン = 接続中アニメ
-				if (isConnecting) {
-					float i = Time.time % 3;
-					goRankingConnecting.GetComponent<Text> ().text = connectingText.Substring (0, connectingText.Length - 2 + (int)i);
-				}
-				// 正常ログイン
-				if (Logined()) {
-					isConnecting = false;
-					goRankingConnecting.GetComponent<Text> ().text = Language.sentence [isLogin ? Language.LOGIN : Language.SIGNUP];
-				}
-			}
-			// ログイン、サインインに失敗
-			if (user.errorCode != null) {
-				// テキストの設定
-				if (!goRankingButtonBack.activeSelf) {
-					goRankingConnecting.GetComponent<Text> ().color = new Color (1, 0, 0, 1);
-					// 名前とパスワードが不一致
-					if (user.errorCode == NCMBException.INCORRECT_PASSWORD ||
-						user.errorCode == NCMBException.INCORRECT_HEADER   ||
-						user.errorCode == NCMBException.OAUTH_ERROR
-					) {
-						goRankingConnecting.GetComponent<Text> ().text = Language.sentence [Language.ERROR_LOGIN_INCORRECT];
-					}
-					// すでに名前が使われている.
-					if (user.errorCode == NCMBException.DUPPLICATION_ERROR) {
-						goRankingConnecting.GetComponent<Text> ().text = Language.sentence [Language.ERROR_SIGNUP_INCORRECT];
-					}
-					// 使用制限（APIコール数、PUSH通知数、ストレージ容量）超過エラーです.
-					if (user.errorCode == NCMBException.DUPPLICATION_ERROR) {
-						goRankingConnecting.GetComponent<Text> ().text = Language.sentence [Language.REQUEST_OVERLOAD];
-					}
-					// 戻るボタンを表示
-					goRankingButtonBack.SetActive (true);
-				}
-			}
-		}
-	}
-
-
-	private bool Logined()
-	{
-		return (user.currentPlayer () != null && !isLogout);
-	}
-
-	private void AutoLogin()
-	{
-		// Read them from strage.
-		string id = PlayerPrefs.GetString (Data.LOGIN_NAME);
-		string password = PlayerPrefs.GetString (Data.LOGIN_PASSWORD);
-
-		if (!(id.Equals ("") && password.Equals (""))) {
-			SetConnecting (true);
-			user.logIn (id, password);
-		}
-	}
-
-
-	private bool ErrorUserAuth(GameObject obj, string id, string password, string repassword = null)
-	{
-		bool error = false;
-		string text = null;
-
-		// Incorrect name.
-		if (id.Equals ("") || id.Length >= 14) {
-			error = true;
-			text = Language.sentence [Language.ERROR_NONAME];
-		// Incorrect password.
-		} else if (password.Equals ("")) {
-			error = true;
-			text = Language.sentence [Language.ERROR_NOPASSWORD];
-		}
-
-		// Incorrect password and confirmatioin password.
-		if (repassword != null) {
-			if (!password.Equals (repassword)) {
-				error = true;
-				text = Language.sentence [Language.ERROR_SIGNUP_NOMATCH_PASSWORD];
-			}
-		}
-
-		// Draw error message.
-		if (error) {
-			obj.SetActive (true);
-			obj.GetComponent<Text> ().text = text;
-			goRankingButtonBack.SetActive (true);
-		}
-
-		return error;
-	}
-
-
-	private void HighScoreData()
-	{
-		switch (ranking.state) {
-		case Ranking.State.Fetch:
-			{
-				ranking.Fetch (user.currentPlayer());
-				ranking.Next (Ranking.State.Save);
-			}
-			break;
-		case Ranking.State.Save:
-			{
-				int score = 0;
-				int stage = 0;
-
-				if (PlayerPrefs.HasKey (Data.RECORD_SCORE_HIGH)) {
-					score = PlayerPrefs.GetInt (Data.RECORD_SCORE_HIGH);
-				}
-
-				ranking.Save (score, stage);
-				ranking.Next (Ranking.State.Goto);
-			}
-			break;
-		case Ranking.State.Goto:
-			ranking.state = Ranking.State.FetchRank;
-			ranking.debug ();
-			break;
-		}
-
-	}
-
-
-	private void RankingData()
-	{
-		switch (ranking.state) {
-		case Ranking.State.FetchRank:
-			{
-				ranking.FetchRank ();
-				ranking.NextLeaderBoard (Ranking.State.TopRank);
-			}
-			break;
-		case Ranking.State.TopRank:
-			{
-				ranking.FetchTopRank ();
-				ranking.NextLeaderBoard (Ranking.State.Finish);
-			}
-			break;
-		case Ranking.State.Finish:
-			ranking.debug ();
-			break;
-		}
-
-	}
-
-
-	public class UserAuth {
-
-		public string userName;
-		public string password;
-		public string errorCode;
-		private string currentPlayerName;
-
-		// mobile backendに接続してログイン ------------------------
-
-		public void logIn( string id, string pw ) {
-
-			errorCode = null;
-			NCMBUser.LogInAsync (id, pw, (NCMBException e) => {
-				
-				// 接続成功したら
-				if( e == null ){
-					currentPlayerName = id;
-					userName = id;
-					password = pw;
-					MainManager.Instance.isLogin = true;
-					MainManager.Instance.loginInfo.SetLoginInfo(userName,password);
-				}
-				else {
-					errorCode = e.ErrorCode;
-				}
-			});
-		}
-
-		// mobile backendに接続して新規会員登録 ------------------------
-
-		public void signUp( string id, string mail, string pw ) {
-
-			NCMBUser user = new NCMBUser();
-			user.UserName = id;
-			user.Email    = mail;
-			user.Password = pw;
-			errorCode = null;
-			user.SignUpAsync((NCMBException e) => { 
-
-				if( e == null ){
-					currentPlayerName = id;
-					userName = id;
-					password = pw;
-					MainManager.Instance.isLogin = true;
-					MainManager.Instance.loginInfo.SetLoginInfo(userName,password);
-				}
-				else {
-					errorCode = e.ErrorCode;
-				}
-			});
-		}
-
-		// mobile backendに接続してログアウト ------------------------
-
-		public void logOut() {
-
-			errorCode = null;
-			NCMBUser.LogOutAsync ( (NCMBException e) => {
-				if( e == null ){
-					currentPlayerName = null;
-					MainManager.Instance.isLogin = false;
-				}
-			});
-		}
-
-		// 現在のプレイヤー名を返す --------------------
-		public string currentPlayer()
-		{
-			return currentPlayerName;
 		}
 	}
 }
