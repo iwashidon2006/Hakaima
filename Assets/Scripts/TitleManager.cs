@@ -237,8 +237,6 @@ public class TitleManager : MonoBehaviour
 	private GameObject goMenuCaution;
 	private GameObject goMenuCautionButtonYes;
 	private GameObject goMenuCautionButtonNo;
-	private GameObject goMenuVolumeOn;
-	private GameObject goMenuVolumeOff;
 	private GameObject goMenuBird;
 	private GameObject goMenuTwitter;
 
@@ -340,8 +338,6 @@ public class TitleManager : MonoBehaviour
 		goMenuCaution					= goMenu.transform.Find ("Caution").gameObject;
 		goMenuCautionButtonYes			= goMenu.transform.Find ("Caution/ButtonYes").gameObject;
 		goMenuCautionButtonNo			= goMenu.transform.Find ("Caution/ButtonNo").gameObject;
-		goMenuVolumeOn					= goMenu.transform.Find ("Volume/On").gameObject;
-		goMenuVolumeOff					= goMenu.transform.Find ("Volume/Off").gameObject;
 		goMenuBird						= goMenu.transform.Find ("Bird").gameObject;
 		goMenuTwitter					= goMenu.transform.Find ("Twitter").gameObject;
 
@@ -393,8 +389,6 @@ public class TitleManager : MonoBehaviour
 		goMenuButtonExtra				.GetComponent<Button> ().onClick.AddListener (() => OnButton (State.Extra));
 		goMenuCautionButtonYes			.GetComponent<Button> ().onClick.AddListener (() => OnMenuButtonStart ());
 		goMenuCautionButtonNo			.GetComponent<Button> ().onClick.AddListener (() => OnMenuButtonCaution (false));
-		goMenuVolumeOn					.GetComponent<Button> ().onClick.AddListener (() => OnVolume (true));
-		goMenuVolumeOff					.GetComponent<Button> ().onClick.AddListener (() => OnVolume (false));
 		goMenuTwitter					.GetComponent<Button> ().onClick.AddListener (() => OnTwitter ());
 
 		goRecordButtonBack				.GetComponent<Button> ().onClick.AddListener (() => OnButton (State.Menu, false));
@@ -430,7 +424,6 @@ public class TitleManager : MonoBehaviour
 		cover 	= new Cover ();
 
 		SoundManager.Instance.PlaySe (SoundManager.SeName.JINGLE_TITLE);
-		OnVolume (PlayerPrefs.GetInt (Data.SOUND_MUTE) == 1);
 
 
 		spriteBirdList = new List<Sprite> (){
@@ -700,16 +693,6 @@ public class TitleManager : MonoBehaviour
 		this.state = state;
 		Create ();
 		SoundManager.Instance.PlaySe (ok ? SoundManager.SeName.SE_OK : SoundManager.SeName.SE_CANCEL);
-	}
-
-
-
-	private void OnVolume (bool isMute)
-	{
-		SoundManager.Instance.SetMute (isMute);
-		goMenuVolumeOn.SetActive (!isMute);
-		goMenuVolumeOff.SetActive (isMute);
-		PlayerPrefs.SetInt (Data.SOUND_MUTE, isMute ? 1 : 0);
 	}
 
 
