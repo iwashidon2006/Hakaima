@@ -53,7 +53,7 @@ public class TitleManager : MonoBehaviour
 		public void Move (float deltaTime, int frameRate)
 		{
 			if (this.isMove) {
-				this.moveTime += deltaTime * 2.5f;
+				this.moveTime += deltaTime * 5f;
 				this.positionX = -(-(this.nowPageIndex - this.prePageIndex) * this.moveTime * (this.moveTime - 2) + this.prePageIndex) * Data.SCREEN_WIDTH;
 				
 				if (this.moveTime >= 1) {
@@ -483,9 +483,7 @@ public class TitleManager : MonoBehaviour
 				text += Language.sentence [Language.RECORD_MAX_TOMB_COLLAPSE] + string.Format ("{0,5}", PlayerPrefs.GetInt (Data.RECORD_MAX_TOMB_COLLAPSE)) + "\n";
 				text += Language.sentence [Language.RECORD_SCORE_ALL] + string.Format ("{0,5}", PlayerPrefs.GetInt (Data.RECORD_SCORE_ALL));
 				goRecordPage.transform.Find ("Page0").GetComponent<Text> ().text = text;
-				if (Language.sentence == Language.sentenceEn) {
-					goRecordPage.transform.Find ("Page0").GetComponent<RectTransform> ().sizeDelta = new Vector2 (925, 1000);
-				}
+				goRecordPage.transform.Find ("Page0").localPosition = Vector3.zero;
 
 				string text0 = null;
 				string text1 = null;
@@ -503,6 +501,8 @@ public class TitleManager : MonoBehaviour
 				}
 				goRecordPage.transform.Find ("Page1").GetComponent<Text> ().text = text0;
 				goRecordPage.transform.Find ("Page2").GetComponent<Text> ().text = text1;
+				goRecordPage.transform.Find ("Page1").localPosition = new Vector3(Data.SCREEN_WIDTH, 0);
+				goRecordPage.transform.Find ("Page2").localPosition = new Vector3(Data.SCREEN_WIDTH * 2, 0);
 
 				catalog.Init (RECORD_PAGE_NUM);
 				goCatalogPage = goRecordPage;
