@@ -375,7 +375,7 @@ public class StoryManager : MonoBehaviour
 		for (int i = 0; i < goCloudList.Count; i++) {
 			StoryCloud cloud = new StoryCloud ();
 			GameObject goCloud = goCloudList [i];
-			cloud.Init (goCloud.transform.localPosition.x, goCloud.transform.localPosition.y, Random.value * 0.2f + 0.2f, 800);
+			cloud.Init (goCloud.transform.localPosition.x, goCloud.transform.localPosition.y, Random.value * 0.2f + 0.2f, 1200);
 			cloudList.Add (cloud);
 		}
 		goCover.SetActive (true);
@@ -494,7 +494,7 @@ public class StoryManager : MonoBehaviour
 			{
 				if (pattern == PATTERN_0) {
 					if (time == 0) {
-						player.Init (-100, POSITION_Y, SPEED, IMAGE_COEFFICIENT);
+						player.Init (-500, POSITION_Y, SPEED, IMAGE_COEFFICIENT);
 						boss.Init (480, POSITION_Y, SPEED * 2, IMAGE_COEFFICIENT);
 						princess.Init (600, POSITION_Y, SPEED * 2, IMAGE_COEFFICIENT);
 						thankMask.Init (1000, 0, 1);
@@ -512,7 +512,7 @@ public class StoryManager : MonoBehaviour
 					if (time == 0) {
 						player.Walk (StoryPerson.Compass.Right);
 					}
-					if (player.positionX >= 50) {
+					if (player.positionX >= -150) {
 						player.Wait (StoryPerson.Compass.Right);
 					}
 					if (time >= 1) {
