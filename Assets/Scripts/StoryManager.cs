@@ -241,7 +241,7 @@ public class StoryManager : MonoBehaviour
 	private GameObject goSelectStageOn;
 
 
-	private const float POSITION_Y			= 200;
+	private const float POSITION_Y			= 0;
 	private const float SPEED				= 8;
 	private const float IMAGE_COEFFICIENT	= 0.02f;
 
@@ -308,9 +308,9 @@ public class StoryManager : MonoBehaviour
 		goBackground	= transform.Find ("UI/Background").gameObject;
 		goThank			= transform.Find ("UI/Thank").gameObject;
 		goThankMask		= transform.Find ("UI/Thank/Mask").gameObject;
-		goPlayer		= transform.Find ("UI/Player").gameObject;
-		goBoss			= transform.Find ("UI/Boss").gameObject;
-		goPrincess		= transform.Find ("UI/Princess").gameObject;
+		goPlayer		= transform.Find ("UI/Chara/Player").gameObject;
+		goBoss			= transform.Find ("UI/Chara/Boss").gameObject;
+		goPrincess		= transform.Find ("UI/Chara/Princess").gameObject;
 		goSelectStage	= transform.Find ("UI/SelectStage").gameObject;
 		goCloudList		= new List<GameObject> (){
 			transform.Find ("UI/Cloud/Cloud0").gameObject,
@@ -415,7 +415,7 @@ public class StoryManager : MonoBehaviour
 				if (pattern == PATTERN_0) {
 					if (time == 0) {
 						player.Init (480, POSITION_Y, SPEED, IMAGE_COEFFICIENT);
-						boss.Init (-100, POSITION_Y, SPEED * 2, IMAGE_COEFFICIENT);
+						boss.Init (-500, POSITION_Y, SPEED * 2, IMAGE_COEFFICIENT);
 						princess.Init (600, POSITION_Y, SPEED * 2, IMAGE_COEFFICIENT);
 					}
 					Color color = Color.black;

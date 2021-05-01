@@ -2486,8 +2486,6 @@ public class GameManager : MonoBehaviour
 							goHelpArrowRight.GetComponent<Button> ().onClick.AddListener (() => OnHelpNextPage ());
 							goHelpArrowLeft	.GetComponent<Button> ().onClick.AddListener (() => OnHelpPrevPage ());
 
-							Destroy (goHelp.transform.Find ("Com").gameObject);
-							Destroy (goHelp.transform.Find ("Logo").gameObject);
 							Destroy (goHelp.transform.Find ("Swipe").gameObject);
 
 							if (PlayerPrefs.GetInt (Data.RECORD_IS_TUTORIAL_FIRST_HELP) == 1) {
