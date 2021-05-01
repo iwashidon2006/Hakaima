@@ -418,6 +418,13 @@ public class TitleManager : MonoBehaviour
 		goExtraLifeNow					.GetComponent<Text> ().text = MainManager.Instance.life.ToString ();
 		goExtraRecommendedButtonMoreGame.GetComponent<Button> ().onClick.AddListener (() => OnExtraButtonMoreGame ());
 
+		for (int i = 0; i < RECORD_PAGE_NUM; i++) {
+			goRecordPage.transform.Find("Page" + i).localPosition = new Vector3(Data.SCREEN_WIDTH * i, 0);
+		}
+		for (int i = 0; i < HELP_PAGE_NUM; i++) {
+			goHelpPage.transform.Find("Page" + i).localPosition = new Vector3(Data.SCREEN_WIDTH * i, 0);
+		}
+
 
 		bird 	= new Bird ();
 		catalog = new Catalog ();
@@ -483,7 +490,6 @@ public class TitleManager : MonoBehaviour
 				text += Language.sentence [Language.RECORD_MAX_TOMB_COLLAPSE] + string.Format ("{0,5}", PlayerPrefs.GetInt (Data.RECORD_MAX_TOMB_COLLAPSE)) + "\n";
 				text += Language.sentence [Language.RECORD_SCORE_ALL] + string.Format ("{0,5}", PlayerPrefs.GetInt (Data.RECORD_SCORE_ALL));
 				goRecordPage.transform.Find ("Page0").GetComponent<Text> ().text = text;
-				goRecordPage.transform.Find ("Page0").localPosition = Vector3.zero;
 
 				string text0 = null;
 				string text1 = null;
@@ -501,8 +507,6 @@ public class TitleManager : MonoBehaviour
 				}
 				goRecordPage.transform.Find ("Page1").GetComponent<Text> ().text = text0;
 				goRecordPage.transform.Find ("Page2").GetComponent<Text> ().text = text1;
-				goRecordPage.transform.Find ("Page1").localPosition = new Vector3(Data.SCREEN_WIDTH, 0);
-				goRecordPage.transform.Find ("Page2").localPosition = new Vector3(Data.SCREEN_WIDTH * 2, 0);
 
 				catalog.Init (RECORD_PAGE_NUM);
 				goCatalogPage = goRecordPage;
