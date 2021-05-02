@@ -377,7 +377,6 @@ public class TitleManager : MonoBehaviour
 		goMenuLogo						.GetComponent<Image> ().SetNativeSize ();
 		goMenuCaution					.transform.Find ("Text").GetComponent<Text> ().text = Language.sentence [Language.START_CAUTION];
 		if (MainManager.Instance.isTutorial) {
-			goMenuButtonStart			.transform.localPosition = goMenuButtonContinue.transform.localPosition;
 			goMenuButtonStart			.GetComponent<Button> ().onClick.AddListener (() => OnMenuButtonStart ());
 			goMenuButtonContinue.SetActive (false);
 		} else {

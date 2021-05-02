@@ -2280,7 +2280,7 @@ public class Data
 			Obstacle.Type.Tomb,
 
 			Obstacle.Type.None,
-			Obstacle.Type.Tomb,
+			Obstacle.Type.None,
 			Obstacle.Type.Tomb,
 			Obstacle.Type.None,
 			Obstacle.Type.Tomb,
@@ -2305,9 +2305,9 @@ public class Data
 			Obstacle.Type.None,
 			Obstacle.Type.Tomb,
 			Obstacle.Type.Tomb,
-			Obstacle.Type.Tomb,
+			Obstacle.Type.RubbleOff,
 			Obstacle.Type.None,
-			Obstacle.Type.None,
+			Obstacle.Type.RubbleOff,
 			Obstacle.Type.Tomb,
 			Obstacle.Type.None,
 			Obstacle.Type.None,
@@ -2324,11 +2324,11 @@ public class Data
 			Obstacle.Type.None,
 			Obstacle.Type.None,
 			Obstacle.Type.None,
-			Obstacle.Type.RubbleOff,
 			Obstacle.Type.None,
-			Obstacle.Type.RubbleOff,
 			Obstacle.Type.None,
 			Obstacle.Type.Tomb,
+			Obstacle.Type.None,
+			Obstacle.Type.None,
 			Obstacle.Type.None,
 			Obstacle.Type.Tomb,
 			Obstacle.Type.None,
@@ -2437,25 +2437,6 @@ public class Data
 			Enemy.Type.None,
 			Enemy.Type.None,
 			Enemy.Type.None,
-			Enemy.Type.None,
-			Enemy.Type.None,
-			Enemy.Type.None,
-			Enemy.Type.None,
-			Enemy.Type.None,
-			Enemy.Type.None,
-			Enemy.Type.None,
-			Enemy.Type.None,
-			Enemy.Type.None,
-			Enemy.Type.None,
-			Enemy.Type.None,
-			Enemy.Type.None,
-			Enemy.Type.None,
-
-			Enemy.Type.None,
-			Enemy.Type.None,
-			Enemy.Type.None,
-			Enemy.Type.None,
-			Enemy.Type.None,
 			Enemy.Type.Skeleton,
 			Enemy.Type.None,
 			Enemy.Type.None,
@@ -2474,7 +2455,7 @@ public class Data
 			Enemy.Type.None,
 			Enemy.Type.None,
 			Enemy.Type.None,
-			Enemy.Type.None,
+			Enemy.Type.Skeleton,
 			Enemy.Type.None,
 			Enemy.Type.None,
 			Enemy.Type.None,
@@ -2490,11 +2471,30 @@ public class Data
 			Enemy.Type.None,
 
 			Enemy.Type.None,
+			Enemy.Type.None,
+			Enemy.Type.None,
+			Enemy.Type.None,
+			Enemy.Type.None,
+			Enemy.Type.None,
+			Enemy.Type.None,
+			Enemy.Type.None,
+			Enemy.Type.None,
+			Enemy.Type.None,
+			Enemy.Type.None,
+			Enemy.Type.Skeleton,
+			Enemy.Type.None,
+			Enemy.Type.None,
+			Enemy.Type.None,
+			Enemy.Type.None,
+			Enemy.Type.None,
+			Enemy.Type.None,
+
+			Enemy.Type.None,
 			Enemy.Type.Ghost,
 			Enemy.Type.None,
 			Enemy.Type.None,
 			Enemy.Type.None,
-			Enemy.Type.None,
+			Enemy.Type.Skeleton,
 			Enemy.Type.None,
 			Enemy.Type.None,
 			Enemy.Type.None,
@@ -4779,114 +4779,22 @@ public class Data
 		},
 		enemyDataListList = new List<List<TutorialStageData.EnemyData>> (){
 			new List<TutorialStageData.EnemyData>() {
-				new TutorialStageData.EnemyData {
-					compass = Enemy.Compass.Right,
-				},
-				new TutorialStageData.EnemyData {
-					compass = Enemy.Compass.Right,
-				},
-				new TutorialStageData.EnemyData {
-					compass = Enemy.Compass.Top,
-				},
-				new TutorialStageData.EnemyData {
-					compass = Enemy.Compass.Top,
-				},
-				new TutorialStageData.EnemyData {
-					compass = Enemy.Compass.Top,
-				},
-				new TutorialStageData.EnemyData {
-					compass = Enemy.Compass.Top,
-				},
-				new TutorialStageData.EnemyData {
-					compass = Enemy.Compass.Top,
-				},
-				new TutorialStageData.EnemyData {
-					compass = Enemy.Compass.Top,
-				},
-				new TutorialStageData.EnemyData {
-					compass = Enemy.Compass.Top,
-				},
-				new TutorialStageData.EnemyData {
-					compass = Enemy.Compass.Top,
-				},
-				new TutorialStageData.EnemyData {
-					compass = Enemy.Compass.Top,
-				},
-				new TutorialStageData.EnemyData {
-					compass = Enemy.Compass.Top,
-				},
-				new TutorialStageData.EnemyData {
-					compass = Enemy.Compass.Top,
-				},
-				new TutorialStageData.EnemyData {
-					compass = Enemy.Compass.Top,
-				},
+			},
+			new List<TutorialStageData.EnemyData>() {
 			},
 			new List<TutorialStageData.EnemyData>() {
 				new TutorialStageData.EnemyData {
 					compass = Enemy.Compass.Right,
 				},
-				new TutorialStageData.EnemyData {
-					compass = Enemy.Compass.Right,
-				},
-				new TutorialStageData.EnemyData {
-					compass = Enemy.Compass.Right,
-				},
-				new TutorialStageData.EnemyData {
-					compass = Enemy.Compass.Right,
-				},
-				new TutorialStageData.EnemyData {
-					compass = Enemy.Compass.Right,
-				},
+			},
+			new List<TutorialStageData.EnemyData>() {
 			},
 			new List<TutorialStageData.EnemyData>() {
 				new TutorialStageData.EnemyData {
 					compass = Enemy.Compass.Left,
 				},
-				new TutorialStageData.EnemyData {
-					compass = Enemy.Compass.Left,
-				},
-				new TutorialStageData.EnemyData {
-					compass = Enemy.Compass.Left,
-				},
-				new TutorialStageData.EnemyData {
-					compass = Enemy.Compass.Top,
-				},
-				new TutorialStageData.EnemyData {
-					compass = Enemy.Compass.Top,
-				},
-				new TutorialStageData.EnemyData {
-					compass = Enemy.Compass.Top,
-				},
-				new TutorialStageData.EnemyData {
-					compass = Enemy.Compass.Top,
-				},
-				new TutorialStageData.EnemyData {
-					compass = Enemy.Compass.Top,
-				},
-				new TutorialStageData.EnemyData {
-					compass = Enemy.Compass.Top,
-				},
-				new TutorialStageData.EnemyData {
-					compass = Enemy.Compass.Top,
-				},
 			},
 			new List<TutorialStageData.EnemyData>() {
-				new TutorialStageData.EnemyData {
-					compass = Enemy.Compass.Left,
-				},
-				new TutorialStageData.EnemyData {
-					compass = Enemy.Compass.Left,
-				},
-				new TutorialStageData.EnemyData {
-					compass = Enemy.Compass.Left,
-				},
-				new TutorialStageData.EnemyData {
-					compass = Enemy.Compass.Left,
-				},
-				new TutorialStageData.EnemyData {
-					compass = Enemy.Compass.Left,
-				},
 			},
 			new List<TutorialStageData.EnemyData>() {
 				new TutorialStageData.EnemyData {
@@ -4898,318 +4806,6 @@ public class Data
 				new TutorialStageData.EnemyData {
 					compass = Enemy.Compass.Right,
 				},
-				new TutorialStageData.EnemyData {
-					compass = Enemy.Compass.Right,
-				},
-				new TutorialStageData.EnemyData {
-					compass = Enemy.Compass.Right,
-				},
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
-			},
-			new List<TutorialStageData.EnemyData>() {
 			},
 			new List<TutorialStageData.EnemyData>() {
 			},
