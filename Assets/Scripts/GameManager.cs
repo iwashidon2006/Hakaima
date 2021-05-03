@@ -1,14 +1,10 @@
-﻿using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.Events;
-using UnityEngine.EventSystems;
-using UnityEngine.Advertisements;
-using System.Collections;
-using System.Collections.Generic;
+﻿using Hakaima;
 using System;
+using System.Collections.Generic;
 using System.Linq;
-using Hakaima;
-using GoogleMobileAds.Api;
+using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 
 public class GameManager : MonoBehaviour
@@ -545,6 +541,7 @@ public class GameManager : MonoBehaviour
 	private bool isTouch;
 	private bool isCommandNoneClick;
 	private Player.Compass playerNextCompass;
+	private Dictionary<Player.Compass, int> keyCountList;
 
 	private int playerNextCommand;
 	public const int PLAYER_NEXT_COMMAND_NONE			= 0;
@@ -995,12 +992,45 @@ public class GameManager : MonoBehaviour
 		}
 
 		ResourceManager.Instance.SetPlayer (3);
+
+
+		keyCountList = new Dictionary<Player.Compass, int>();
+		keyCountList[Player.Compass.Left] = 0;
+		keyCountList[Player.Compass.Right] = 0;
+		keyCountList[Player.Compass.Bottom] = 0;
+		keyCountList[Player.Compass.Top] = 0;
 	}
 
 
 
 	private void Run ()
 	{
+		if (Input.GetKey(KeyCode.LeftArrow)) {
+			OnKey(Player.Compass.Left);
+		}
+		if (Input.GetKey(KeyCode.RightArrow)) {
+			OnKey(Player.Compass.Right);
+		}
+		if (Input.GetKey(KeyCode.DownArrow)) {
+			OnKey(Player.Compass.Bottom);
+		}
+		if (Input.GetKey(KeyCode.UpArrow)) {
+			OnKey(Player.Compass.Top);
+		}
+		if (Input.GetKeyUp(KeyCode.LeftArrow)) {
+			OnKeyUp(Player.Compass.Left);
+		}
+		if (Input.GetKeyUp(KeyCode.RightArrow)) {
+			OnKeyUp(Player.Compass.Right);
+		}
+		if (Input.GetKeyUp(KeyCode.DownArrow)) {
+			OnKeyUp(Player.Compass.Bottom);
+		}
+		if (Input.GetKeyUp(KeyCode.UpArrow)) {
+			OnKeyUp(Player.Compass.Top);
+		}
+
+
 		bool loop;
 		do {
 			loop = false;
@@ -2988,6 +3018,56 @@ public class GameManager : MonoBehaviour
 	private Player.Compass checkCompass;
 	private Vector2 checkPosition;
 	private float checkHoleTime;
+
+
+
+	private void OnKey (Player.Compass compass)
+	{
+		switch (state)
+		{
+			case State.Play:
+				{
+					checkCompass = compass;
+					keyCountList[checkCompass]++;
+
+					if (playerNextCommand == PLAYER_NEXT_COMMAND_NONE) {
+						playerNextCommand = PLAYER_NEXT_COMMAND_COMPASS;
+					}
+					if (playerNextCommand == PLAYER_NEXT_COMMAND_COMPASS) {
+						playerNextCompass = checkCompass;
+						if (keyCountList[checkCompass] >= 3) {
+							playerNextCommand = PLAYER_NEXT_COMMAND_COMPASS_WALK;
+						}
+					}
+					if (playerNextCommand == PLAYER_NEXT_COMMAND_COMPASS_WALK) {
+						playerNextCompass = checkCompass;
+					}
+
+					isTouch = true;
+					groupPlayer.canHoleCycle = false;
+				}
+				break;
+			case State.TutorialHelp:
+				{
+				}
+				break;
+		}
+	}
+
+
+
+	private void OnKeyUp (Player.Compass compass)
+    {
+		if (state == State.Play) {
+			keyCountList[compass] = 0;
+			isTouch = keyCountList.Any(keyDic => keyDic.Value > 0);
+
+			if (playerNextCommand == PLAYER_NEXT_COMMAND_NONE)
+				isCommandNoneClick = true;
+		}
+	}
+
+
 
 	private void OnTouchPointerDown (PointerEventData eventData)
 	{
