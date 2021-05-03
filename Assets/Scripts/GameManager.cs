@@ -1006,16 +1006,16 @@ public class GameManager : MonoBehaviour
 	private void Run ()
 	{
 		if (Input.GetKey(KeyCode.LeftArrow)) {
-			OnKey(Player.Compass.Left);
+			OnKeyDown(Player.Compass.Left);
 		}
 		if (Input.GetKey(KeyCode.RightArrow)) {
-			OnKey(Player.Compass.Right);
+			OnKeyDown(Player.Compass.Right);
 		}
 		if (Input.GetKey(KeyCode.DownArrow)) {
-			OnKey(Player.Compass.Bottom);
+			OnKeyDown(Player.Compass.Bottom);
 		}
 		if (Input.GetKey(KeyCode.UpArrow)) {
-			OnKey(Player.Compass.Top);
+			OnKeyDown(Player.Compass.Top);
 		}
 		if (Input.GetKeyUp(KeyCode.LeftArrow)) {
 			OnKeyUp(Player.Compass.Left);
@@ -1028,6 +1028,12 @@ public class GameManager : MonoBehaviour
 		}
 		if (Input.GetKeyUp(KeyCode.UpArrow)) {
 			OnKeyUp(Player.Compass.Top);
+		}
+		if (Input.GetKey(KeyCode.Return)) {
+			OnEnterDown();
+		}
+		if (Input.GetKeyUp(KeyCode.Return)) {
+			OnEnterUp();
 		}
 
 
@@ -1190,7 +1196,6 @@ public class GameManager : MonoBehaviour
 								}
 							} else {
 								if (!isTouch) {
-									groupPlayer.canHoleCycle = false;
 									playerNextCompass = player.compass;
 									playerNextCommand = PLAYER_NEXT_COMMAND_NONE;
 								}
@@ -3021,7 +3026,7 @@ public class GameManager : MonoBehaviour
 
 
 
-	private void OnKey (Player.Compass compass)
+	private void OnKeyDown (Player.Compass compass)
 	{
 		switch (state)
 		{
@@ -3044,7 +3049,6 @@ public class GameManager : MonoBehaviour
 					}
 
 					isTouch = true;
-					groupPlayer.canHoleCycle = false;
 				}
 				break;
 			case State.TutorialHelp:
@@ -3061,9 +3065,81 @@ public class GameManager : MonoBehaviour
 		if (state == State.Play) {
 			keyCountList[compass] = 0;
 			isTouch = keyCountList.Any(keyDic => keyDic.Value > 0);
+		}
+	}
 
-			if (playerNextCommand == PLAYER_NEXT_COMMAND_NONE)
-				isCommandNoneClick = true;
+
+
+	private void OnEnterDown ()
+    {
+		if (MainManager.Instance.isTutorial) {
+			if (PlayerPrefs.GetInt (Data.RECORD_IS_TUTORIAL_FIRST_HELP) == 1) {
+				MainManager.Instance.NextStage (life.now);
+				SetClearNextStage ();
+			}
+		}
+
+		switch (state)
+		{
+			case State.Ready:
+			case State.ReadyContinue:
+				{
+					if (!MainManager.Instance.isTutorial) {
+						if (pattern == 0) {
+							if (time > 0) {
+								pattern = 1;
+								time = 0;
+							}
+						}
+					}
+				}
+				break;
+			case State.Play:
+				{
+					groupPlayer.canHoleCycle = true;
+				}
+				break;
+			case State.Clear:
+				{
+					if (pattern == 0) {
+					} else if (pattern < 10) {
+						pattern = 10;
+						time = 0;
+					} else if (pattern == 11) {
+						UnityEngine.Analytics.Analytics.CustomEvent ("stage_clear", new Dictionary<string, object> {
+							{"stage_" + (MainManager.Instance.stage + 1), true},
+						});
+
+						if (!collectClear.isAllEnemyDie)
+							PlayerPrefs.SetInt (Data.RECORD_ESCAPE, PlayerPrefs.GetInt (Data.RECORD_ESCAPE) + 1);
+
+						bool isBoss = groupEnemyList.Exists (obj => obj.isBoss);
+						if (isBoss) {
+							MainManager.Instance.StoryEpilogue ();
+						} else {
+							MainManager.Instance.NextStage (life.now);
+						}
+						SetClearNextStage ();
+					}
+				}
+				break;
+		}
+	}
+
+
+
+	private void OnEnterUp ()
+    {
+		switch (state)
+		{
+			case State.Play:
+				{
+					groupPlayer.canHoleCycle = false;
+
+					if (playerNextCommand == PLAYER_NEXT_COMMAND_NONE)
+						isCommandNoneClick = true;
+				}
+				break;
 		}
 	}
 
