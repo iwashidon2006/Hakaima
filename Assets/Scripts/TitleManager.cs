@@ -275,6 +275,14 @@ public class TitleManager : MonoBehaviour
 	private GameObject goExtraRecommendedTitle;
 	private GameObject goExtraRecommendedButtonMoreGame;
 
+	private GameObject goFocus;
+	private Dictionary<int, GameObject> goFocusButtonList;
+	private Dictionary<int, GameObject> goFocusEmptyButtonList;
+	private Dictionary<int, GameObject> goFocusMenuButtonList;
+	private Dictionary<int, GameObject> goFocusMenuCautionButtonList;
+	private Dictionary<int, GameObject> goFocusRecordButtonList;
+	private Dictionary<int, GameObject> goFocusHelpButtonList;
+
 
 	private Catalog catalog;
 	private Bird bird;
@@ -294,7 +302,7 @@ public class TitleManager : MonoBehaviour
 
 	private static bool isCoverOnce = true;
 
-	private string connectingText;
+	private int focusIndex;
 
 
 
@@ -372,6 +380,9 @@ public class TitleManager : MonoBehaviour
 		goExtraRecommendedTitle			= goExtra.transform.Find ("Recommended/Title").gameObject;
 		goExtraRecommendedButtonMoreGame= goExtra.transform.Find ("Recommended/ButtonMoreGame").gameObject;
 
+		goFocus							= transform.Find("UI/Focus").gameObject;
+		goFocus							.transform.SetAsLastSibling();
+
 
 		goMenuLogo						.GetComponent<Image> ().sprite = Language.sentence == Language.sentenceEn ? spriteLogoEn : spriteLogo;
 		goMenuLogo						.GetComponent<Image> ().SetNativeSize ();
@@ -392,11 +403,15 @@ public class TitleManager : MonoBehaviour
 
 		goRecordButtonBack				.GetComponent<Button> ().onClick.AddListener (() => OnButton (State.Menu, false));
 		goRecordArrowRight				.GetComponent<Button> ().onClick.AddListener (() => OnCatalogNextPage ());
+		goRecordArrowRight				.GetComponent<Button> ().onClick.AddListener (() => OnFocusBottom (false));
 		goRecordArrowLeft				.GetComponent<Button> ().onClick.AddListener (() => OnCatalogPrevPage ());
+		goRecordArrowLeft				.GetComponent<Button> ().onClick.AddListener (() => OnFocusBottom (false));
 
 		goHelpButtonBack				.GetComponent<Button> ().onClick.AddListener (() => OnButton (State.Menu, false));
 		goHelpArrowRight				.GetComponent<Button> ().onClick.AddListener (() => OnCatalogNextPage ());
+		goHelpArrowRight				.GetComponent<Button> ().onClick.AddListener (() => OnFocusBottom (false));
 		goHelpArrowLeft					.GetComponent<Button> ().onClick.AddListener (() => OnCatalogPrevPage ());
+		goHelpArrowLeft					.GetComponent<Button> ().onClick.AddListener (() => OnFocusBottom (false));
 		goRecordSwipe					.GetComponent<EventTrigger> ().triggers.Find (obj => obj.eventID == EventTriggerType.Drag).callback.AddListener (eventData => OnSwipe ((PointerEventData)eventData));
 		goHelpSwipe						.GetComponent<EventTrigger> ().triggers.Find (obj => obj.eventID == EventTriggerType.Drag).callback.AddListener (eventData => OnSwipe ((PointerEventData)eventData));
 
@@ -441,10 +456,37 @@ public class TitleManager : MonoBehaviour
 		goConceal.SetActive (true);
 		goCover.SetActive (isCoverOnce);
 		isCoverOnce = false;
-	}
-	
-	
-	
+
+		goFocusButtonList = new Dictionary<int, GameObject>();
+		goFocusEmptyButtonList = new Dictionary<int, GameObject>();
+		goFocusMenuButtonList = new Dictionary<int, GameObject>
+        {
+            [0] = goMenuButtonStart,
+            [1] = goMenuButtonContinue,
+            [2] = goMenuButtonRecord,
+            [3] = goMenuButtonHelp
+        };
+        goFocusMenuCautionButtonList = new Dictionary<int, GameObject>
+        {
+            [0] = goMenuCautionButtonYes,
+            [1] = goMenuCautionButtonNo
+        };
+        goFocusRecordButtonList = new Dictionary<int, GameObject>
+        {
+            [0] = goRecordArrowLeft,
+            [1] = goRecordArrowRight,
+            [2] = goRecordButtonBack
+        };
+        goFocusHelpButtonList = new Dictionary<int, GameObject>
+        {
+            [0] = goHelpArrowLeft,
+            [1] = goHelpArrowRight,
+            [2] = goHelpButtonBack
+        };
+    }
+
+
+
 	private void Create ()
 	{
 		goMenu.SetActive (false);
@@ -455,6 +497,9 @@ public class TitleManager : MonoBehaviour
 		goExtra.SetActive (false);
 		//MainManager.Instance.nendAdIcon.Hide ();
 		MainManager.Instance.bannerView.Hide ();
+
+		focusIndex = 0;
+		goFocusButtonList = goFocusEmptyButtonList;
 
 		switch (this.state) {
 		case State.Menu:
@@ -468,6 +513,9 @@ public class TitleManager : MonoBehaviour
 				//if (MainManager.Instance.isAdvertise)
 				//	MainManager.Instance.nendAdIcon.Show ();
 				MainManager.Instance.bannerView.Show ();
+
+				goFocusButtonList = goFocusMenuButtonList;
+				OnFocusBottom(false);
 			}
 			break;
 		case State.Record:
@@ -512,6 +560,9 @@ public class TitleManager : MonoBehaviour
 				goCatalogPoint = goRecordPoint;
 				goCatalogArrowRight = goRecordArrowRight;
 				goCatalogArrowLeft = goRecordArrowLeft;
+
+				goFocusButtonList = goFocusRecordButtonList;
+				OnFocusBottom(false);
 			}
 			break;
 		case State.Help:
@@ -523,6 +574,9 @@ public class TitleManager : MonoBehaviour
 				goCatalogPoint = goHelpPoint;
 				goCatalogArrowRight = goHelpArrowRight;
 				goCatalogArrowLeft = goHelpArrowLeft;
+
+				goFocusButtonList = goFocusHelpButtonList;
+				OnFocusBottom(false);
 			}
 			break;
 		case State.End:
@@ -549,6 +603,16 @@ public class TitleManager : MonoBehaviour
 	private void Run ()
 	{
 		CheckBackKey ();
+
+		if (Input.GetKeyDown(KeyCode.DownArrow)) {
+			OnFocusBottom(true);
+		}
+		if (Input.GetKeyDown(KeyCode.UpArrow)) {
+			OnFocusTop(true);
+		}
+		if (Input.GetKeyDown(KeyCode.Return)) {
+			OnFocusDown();
+		}
 
 
 		switch (this.state) {
@@ -622,6 +686,19 @@ public class TitleManager : MonoBehaviour
 			}
 			break;
 		}
+		if (goFocusButtonList.Count > 0) {
+			if (!goFocus.activeSelf) {
+				goFocus.SetActive (true);
+			}
+			if (goFocus.transform.localPosition.x != goFocusButtonList[focusIndex].transform.localPosition.x || goFocus.transform.localPosition.y != goFocusButtonList[focusIndex].transform.localPosition.y) {
+				goFocus.transform.localPosition = new Vector3 (goFocusButtonList[focusIndex].transform.localPosition.x, goFocusButtonList[focusIndex].transform.localPosition.y);
+			}
+		}
+        else { 
+			if (goFocus.activeSelf) {
+				goFocus.SetActive (false);
+			}
+		}
 	}
 	
 	
@@ -641,6 +718,9 @@ public class TitleManager : MonoBehaviour
 	{
 		goMenuCaution.SetActive (active);
 		SoundManager.Instance.PlaySe (active ? SoundManager.SeName.SE_OK : SoundManager.SeName.SE_CANCEL);
+
+		focusIndex = 0;
+		goFocusButtonList = active ? goFocusMenuCautionButtonList : goFocusMenuButtonList;
 	}
 
 
@@ -766,6 +846,80 @@ public class TitleManager : MonoBehaviour
 				OnButton (State.Menu, false);
 				break;
 			}
+		}
+	}
+
+
+	private void OnFocusBottom(bool isClick)
+	{
+		int focusMax = goFocusButtonList.Count;
+		switch (this.state)
+		{
+			case State.Menu:
+				{
+					if (isClick) {
+						focusIndex = (focusIndex + 1) % focusMax;
+					}
+					if (!goFocusButtonList[focusIndex].activeSelf) {
+						focusIndex = (focusIndex + 1) % focusMax;
+					}
+				}
+				break;
+			case State.Record:
+			case State.Help:
+                {
+					if (isClick) {
+						focusIndex = (focusIndex + 1) % focusMax;
+					}
+					if (focusIndex == 0 && !catalog.isArrowLeft) {
+						focusIndex = (focusIndex + 1) % focusMax;
+					}
+					if (focusIndex == 1 && !catalog.isArrowRight) {
+						focusIndex = (focusIndex + 1) % focusMax;
+					}
+				}
+				break;
+		}
+	}
+
+
+	private void OnFocusTop(bool isClick)
+	{
+		int focusMax = goFocusButtonList.Count;
+		switch (this.state)
+		{
+			case State.Menu:
+				{
+					if (isClick) {
+						focusIndex = (focusIndex + focusMax - 1) % focusMax;
+					}
+					if (!goFocusButtonList[focusIndex].activeSelf) {
+						focusIndex = (focusIndex + focusMax - 1) % focusMax;
+					}
+				}
+				break;
+			case State.Record:
+			case State.Help:
+                {
+					if (isClick) {
+						focusIndex = (focusIndex + focusMax - 1) % focusMax;
+					}
+					if (focusIndex == 0 && !catalog.isArrowLeft) {
+						focusIndex = (focusIndex + focusMax - 1) % focusMax;
+					}
+					if (focusIndex == 1 && !catalog.isArrowRight) {
+						focusIndex = (focusIndex + focusMax - 1) % focusMax;
+					}
+				}
+				break;
+		}
+	}
+
+
+	private void OnFocusDown()
+	{
+		if (goFocusButtonList.Count > 0) {
+			goFocusButtonList[focusIndex].GetComponent<Button>().onClick.Invoke();
 		}
 	}
 }
