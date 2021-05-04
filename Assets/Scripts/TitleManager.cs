@@ -381,7 +381,6 @@ public class TitleManager : MonoBehaviour
 		goExtraRecommendedButtonMoreGame= goExtra.transform.Find ("Recommended/ButtonMoreGame").gameObject;
 
 		goFocus							= transform.Find("UI/Focus").gameObject;
-		goFocus							.transform.SetAsLastSibling();
 
 
 		goMenuLogo						.GetComponent<Image> ().sprite = Language.sentence == Language.sentenceEn ? spriteLogoEn : spriteLogo;
@@ -483,7 +482,11 @@ public class TitleManager : MonoBehaviour
             [1] = goHelpArrowRight,
             [2] = goHelpButtonBack
         };
-    }
+
+		goFocus.transform.SetAsLastSibling();
+		goCover.transform.SetAsLastSibling();
+		goConceal.transform.SetAsLastSibling();
+	}
 
 
 
@@ -692,6 +695,9 @@ public class TitleManager : MonoBehaviour
 			}
 			if (goFocus.transform.localPosition.x != goFocusButtonList[focusIndex].transform.localPosition.x || goFocus.transform.localPosition.y != goFocusButtonList[focusIndex].transform.localPosition.y) {
 				goFocus.transform.localPosition = new Vector3 (goFocusButtonList[focusIndex].transform.localPosition.x, goFocusButtonList[focusIndex].transform.localPosition.y);
+			}
+			if (goFocus.GetComponent<RectTransform>().sizeDelta.x != goFocusButtonList[focusIndex].GetComponent<RectTransform>().sizeDelta.x || goFocus.GetComponent<RectTransform>().sizeDelta.y != goFocusButtonList[focusIndex].GetComponent<RectTransform>().sizeDelta.y) {
+				goFocus.GetComponent<RectTransform>().sizeDelta = new Vector2 (goFocusButtonList[focusIndex].GetComponent<RectTransform>().sizeDelta.x, goFocusButtonList[focusIndex].GetComponent<RectTransform>().sizeDelta.y);
 			}
 		}
         else { 
