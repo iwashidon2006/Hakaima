@@ -571,6 +571,11 @@ public class GameManager : MonoBehaviour
 	private GameObject goDebug;
 	private bool isDebugDamage;
 
+	private int focusIndex; 
+	private GameObject goFocus;
+	private Dictionary<int, GameObject> goFocusButtonList;
+	private Dictionary<int, GameObject> goFocusEmptyButtonList;
+	private Dictionary<int, GameObject> goFocusContinueButtonList;
 
 
 	private void Awake ()
@@ -801,6 +806,17 @@ public class GameManager : MonoBehaviour
 		if (!MainManager.Instance.isDebug) {
 			goDebug.SetActive (false);
 		}
+
+		goFocus = transform.Find("UI/Focus").gameObject;
+		goFocus.SetActive(false);
+		goFocusButtonList = new Dictionary<int, GameObject>();
+		goFocusEmptyButtonList = new Dictionary<int, GameObject>();
+		goFocusContinueButtonList = new Dictionary<int, GameObject>
+        {
+            [0] = collectContinue.goButtonContinue,
+            [1] = collectContinue.goButtonMovie,
+            [2] = collectContinue.goButtonEnd
+        };
 	}
 
 
@@ -999,6 +1015,9 @@ public class GameManager : MonoBehaviour
 		keyCountList[Player.Compass.Right] = 0;
 		keyCountList[Player.Compass.Bottom] = 0;
 		keyCountList[Player.Compass.Top] = 0;
+
+		focusIndex = 0;
+		goFocusButtonList = goFocusEmptyButtonList;
 	}
 
 
@@ -1017,6 +1036,12 @@ public class GameManager : MonoBehaviour
 		if (Input.GetKey(KeyCode.UpArrow)) {
 			OnKeyDown(Player.Compass.Top);
 		}
+		if (Input.GetKey(KeyCode.Return)) {
+			OnEnterDown();
+		}
+		if (Input.GetKey(KeyCode.JoystickButton0)) {
+			OnEnterDown();
+		}
 		if (Input.GetKeyUp(KeyCode.LeftArrow)) {
 			OnKeyUp(Player.Compass.Left);
 		}
@@ -1029,11 +1054,24 @@ public class GameManager : MonoBehaviour
 		if (Input.GetKeyUp(KeyCode.UpArrow)) {
 			OnKeyUp(Player.Compass.Top);
 		}
-		if (Input.GetKey(KeyCode.Return)) {
-			OnEnterDown();
-		}
 		if (Input.GetKeyUp(KeyCode.Return)) {
 			OnEnterUp();
+		}
+		if (Input.GetKeyUp(KeyCode.JoystickButton0)) {
+			OnEnterUp();
+		}
+
+		if (Input.GetKeyDown(KeyCode.DownArrow)) {
+			OnFocusBottom(true);
+		}
+		if (Input.GetKeyDown(KeyCode.UpArrow)) {
+			OnFocusTop(true);
+		}
+		if (Input.GetKeyDown(KeyCode.Return)) {
+			OnFocusDown();
+		}
+		if (Input.GetKeyDown(KeyCode.JoystickButton0)) {
+			OnFocusDown();
 		}
 
 
@@ -2433,6 +2471,9 @@ public class GameManager : MonoBehaviour
 						SoundManager.Instance.PlaySe (SoundManager.SeName.JINGLE_GAMEOVER);
 						//MainManager.Instance.nendAdBanner.Show ();
 						MainManager.Instance.bannerView.Show ();
+
+						focusIndex = 0;
+						goFocusButtonList = goFocusContinueButtonList;
 					}
 
 					switch (continueCommand) {
@@ -2987,6 +3028,22 @@ public class GameManager : MonoBehaviour
 				goHelpPoint.transform.Find ("PointNow").localPosition = goHelpPoint.transform.Find ("Point" + help.nowPageIndex).localPosition;
 			}
 			break;
+		}
+
+		if (goFocusButtonList.Count > 0) {
+			if (!goFocus.activeSelf) {
+				goFocus.SetActive (true);
+			}
+			if (goFocus.transform.parent != goFocusButtonList[focusIndex].transform) {
+				goFocus.transform.SetParent(goFocusButtonList[focusIndex].transform);
+				goFocus.transform.localPosition = Vector3.zero;
+				goFocus.GetComponent<RectTransform>().sizeDelta = new Vector2(goFocusButtonList[focusIndex].GetComponent<RectTransform>().sizeDelta.x, goFocusButtonList[focusIndex].GetComponent<RectTransform>().sizeDelta.y);
+			}
+		}
+        else { 
+			if (goFocus.activeSelf) {
+				goFocus.SetActive (false);
+			}
 		}
 	}
 
@@ -4133,4 +4190,39 @@ public class GameManager : MonoBehaviour
 		transform.Find ("UI/Debug/Damage/Text").GetComponent<Text> ().text = string.Format ("敵当\n{0}", isDebugDamage ? "ON" : "OFF");
 	}
 
+
+	private void OnFocusBottom(bool isClick)
+	{
+		int focusMax = goFocusButtonList.Count;
+		if (focusMax > 0) {
+			if (isClick) {
+				focusIndex = (focusIndex + 1) % focusMax;
+			}
+			if (!goFocusButtonList[focusIndex].activeSelf) {
+				focusIndex = (focusIndex + 1) % focusMax;
+			}
+		}
+	}
+
+
+	private void OnFocusTop(bool isClick)
+	{
+		int focusMax = goFocusButtonList.Count;
+		if (focusMax > 0) {
+			if (isClick) {
+				focusIndex = (focusIndex + focusMax - 1) % focusMax;
+			}
+			if (!goFocusButtonList[focusIndex].activeSelf) {
+				focusIndex = (focusIndex + focusMax - 1) % focusMax;
+			}
+		}
+	}
+
+
+	private void OnFocusDown()
+	{
+		if (goFocusButtonList.Count > 0) {
+			goFocusButtonList[focusIndex].GetComponent<Button>().onClick.Invoke();
+		}
+	}
 }

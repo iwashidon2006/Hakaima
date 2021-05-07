@@ -483,7 +483,6 @@ public class TitleManager : MonoBehaviour
             [2] = goHelpButtonBack
         };
 
-		goFocus.transform.SetAsLastSibling();
 		goCover.transform.SetAsLastSibling();
 		goConceal.transform.SetAsLastSibling();
 	}
@@ -616,6 +615,9 @@ public class TitleManager : MonoBehaviour
 		if (Input.GetKeyDown(KeyCode.Return)) {
 			OnFocusDown();
 		}
+		if (Input.GetKeyDown(KeyCode.JoystickButton0)) {
+			OnFocusDown();
+		}
 
 
 		switch (this.state) {
@@ -693,11 +695,10 @@ public class TitleManager : MonoBehaviour
 			if (!goFocus.activeSelf) {
 				goFocus.SetActive (true);
 			}
-			if (goFocus.transform.localPosition.x != goFocusButtonList[focusIndex].transform.localPosition.x || goFocus.transform.localPosition.y != goFocusButtonList[focusIndex].transform.localPosition.y) {
-				goFocus.transform.localPosition = new Vector3 (goFocusButtonList[focusIndex].transform.localPosition.x, goFocusButtonList[focusIndex].transform.localPosition.y);
-			}
-			if (goFocus.GetComponent<RectTransform>().sizeDelta.x != goFocusButtonList[focusIndex].GetComponent<RectTransform>().sizeDelta.x || goFocus.GetComponent<RectTransform>().sizeDelta.y != goFocusButtonList[focusIndex].GetComponent<RectTransform>().sizeDelta.y) {
-				goFocus.GetComponent<RectTransform>().sizeDelta = new Vector2 (goFocusButtonList[focusIndex].GetComponent<RectTransform>().sizeDelta.x, goFocusButtonList[focusIndex].GetComponent<RectTransform>().sizeDelta.y);
+			if (goFocus.transform.parent != goFocusButtonList[focusIndex].transform) {
+				goFocus.transform.SetParent(goFocusButtonList[focusIndex].transform);
+				goFocus.transform.localPosition = Vector3.zero;
+				goFocus.GetComponent<RectTransform>().sizeDelta = new Vector2(goFocusButtonList[focusIndex].GetComponent<RectTransform>().sizeDelta.x, goFocusButtonList[focusIndex].GetComponent<RectTransform>().sizeDelta.y);
 			}
 		}
         else { 
