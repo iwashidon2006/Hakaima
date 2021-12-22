@@ -461,7 +461,7 @@ public class StoryManager : MonoBehaviour
 					goCover.GetComponent<Image> ().color = color;
 					if (color.a >= 1) {
 						if (isSelectStage)
-							MainManager.Instance.SelectStage (selectStageIndex, MainManager.START_LIFE);
+							MainManager.Instance.SelectStage (selectStageIndex, MainManager.START_LIFE, MainManager.START_WEAPON);
 						else
 							MainManager.Instance.TutorialStage ();
 					}

@@ -102,15 +102,26 @@ public class Data
 
 
 	public const string URL								= "https://play.google.com/store/apps/details?id=com.kohchanstudio.SamuraiDrama";
+	public const string URL_IOS							= "https://itunes.apple.com/us/app/samurai-drama/id1308795627?l=ja&ls=1&mt=8";
 	public const string MORE_GAME_PACKAGENAME_ANDROID	= "market://details?id=com.KohchanStudio.ShogiPuzzle";
-	public const string MORE_GAME_PACKAGENAME_IOS		= "";
+	//public const string MORE_GAME_PACKAGENAME_IOS		= "http://appstore.com/将棋駒でパズル";
+	public const string MORE_GAME_PACKAGENAME_IOS		= "itms-apps://itunes.apple.com/app/id1330151898";
+	public const string PRIVACY_POLICY_URL				= "https://kohchanstudioinfo.wixsite.com/privacy-policy";
 
 	public const int TARGET_FRAME_RATE					= 60;
 	public const float DELTA_TIME						= 1f/60;
 
 	public const int SCREEN_WIDTH						= 1080;
 	public const int SCREEN_HEIGHT						= 1920;
-	public const int SCREEN_RESOLUTION					= 1024;
+	public const float SCREEN_RESOLUTION_WIDTH			= 576;
+	public const float SCREEN_RESOLUTION_HEIGHT			= 1024;
+
+	public static readonly float DeviceWidth			= UnityEngine.Screen.width;
+	public static readonly float DeviceHeight			= UnityEngine.Screen.height;
+
+	public static readonly float ResolutionRatio		= 1.0f * DeviceHeight / SCREEN_RESOLUTION_HEIGHT;
+	public static readonly float AspectRatio			= 1.0f * SCREEN_WIDTH / SCREEN_HEIGHT;
+	public static readonly float DeviceAspectRatio		= 1.0f * DeviceWidth / DeviceHeight;
 
 	public const int LENGTH_X							= 10;
 	public const int LENGTH_Y							= 17;
@@ -153,6 +164,8 @@ public class Data
 
 	public const int FROM_TIME_TO_SCORE_COEFFICIENT		= 6;
 
+	public const int CONTINUE_LIFE						= 2;
+
 	public const string RECORD_ENEMY_DIE_TO_TOMB		= "recordEnemyDieToTomb";
 	public const string RECORD_ENEMY_DIE_TO_HOLE		= "recordEnemyDieToHole";
 	public const string RECORD_TOMB_COLLAPSE			= "recordTombCollapse";
@@ -181,6 +194,7 @@ public class Data
 	public const string SOUND_MUTE						= "sound_mute";
 
 	public const string MY_LIFE							= "my_life";
+	public const string MY_WEAPON						= "my_weapon";
 
 	public const string LOGIN_NAME						= "login_name";
 	public const string LOGIN_PASSWORD					= "login_password";
@@ -191,12 +205,58 @@ public class Data
 	public const int CHARACTER_MIKO						= 2;
 	public const int CHARACTER_NINJA					= 3;
 	public const int CHARACTER_MATIMUSUME				= 4;
-	public const int CHARACTER_KENSHI					= 5;
+	public const int CHARACTER_HACHI					= 5;
 
 	public const string RECORD_CHARACTER				= "recordCharacter";
 	public const string RECORD_CHARACTER_SELECT			= "recordCharacterSelect";
 	public const string RECORD_GACHATICKET				= "recordGachaTicket";
 
+	public const string INFORMATION						= "information";
+
+	public const string LOGIN_TIME						= "loginTime";
+
+
+	// Firebase.
+	// 画面遷移.
+	public const string FIREBASE_SCREEN_MENU				= "sMenu";
+	public const string FIREBASE_SCREEN_GACHA				= "sGacha";
+	public const string FIREBASE_SCREEN_RECORD				= "sRecord";
+	public const string FIREBASE_SCREEN_RANKING				= "sRanking";
+	public const string FIREBASE_SCREEN_HELP				= "sHelp";
+	public const string FIREBASE_SCREEN_EXTRA				= "sExtra";
+	public const string FIREBASE_SCREEN_SELECT_CHARACTER	= "sSelectCharacter";
+	public const string FIREBASE_SCREEN_STAGECLEAR			= "sStageClearNo.";
+	public const string FIREBASE_SCREEN_STAGECLEAR_RUN		= "sStageClearRunNo.";
+	public const string FIREBASE_SCREEN_GAMECLEAR			= "sGameClear";
+	public const string FIREBASE_SCREEN_GAMEOVER			= "sGameOver";
+	public const string FIREBASE_SCREEN_PUASE				= "sPause";
+	public const string FIREBASE_SCREEN_STAGE				= "sStageNo.";			// StageNo1といった形で使う.
+	public const string FIREBASE_SCREEN_BONUS				= "sBonus";				// ログインボーナス.
+	public const string FIREBASE_SCREEN_INFORMATION			= "sNotice";			// お知らせ.
+	// クリック・結果.
+	public const string FIREBASE_EVENT_START				= "eStart";				// Game Start.
+	public const string FIREBASE_EVENT_CONTINUE				= "eContinue";			// Game Continue.
+	public const string FIREBASE_EVENT_GACHA_PLAY			= "eGachaPlay";			// ガチャを回した.
+	public const string FIREBASE_EVENT_GACHA_KUNOICHI		= "eGachaKunoichi";		// くノ一を手に入れた.
+	public const string FIREBASE_EVENT_GACHA_NINJA			= "eGachaNinja";		// 忍者を手に入れた.
+	public const string FIREBASE_EVENT_GACHA_MIKO			= "eGachaMiko";			// 巫女.
+	public const string FIREBASE_EVENT_GACHA_MACHIMUSUME	= "eGachaMachimusume";	// 町娘.
+	public const string FIREBASE_EVENT_GACHA_HACHI			= "eGachaHachi";		// ハチ.
+	public const string FIREBASE_EVENT_GACHA_LIFE			= "eGachaLife";			// ライフ.
+	public const string FIREBASE_EVENT_RANKING_LOGIN		= "eRankingLogin";		// ランキングにログイン.
+	public const string FIREBASE_EVENT_RANKING_SIGNIN		= "eRankingSignin";		// ランキングを登録.
+	public const string FIREBASE_EVENT_EXTRA_ITEM			= "eExtraItem";			// アイテムの動画広告.
+	public const string FIREBASE_EVENT_EXTRA_LIFE			= "eExtraLife";			// 残機アップの動画広告.
+	public const string FIREBASE_EVENT_EXTRA_MOREGAME		= "eMoreGame";			// 
+	public const string FIREBASE_EVENT_TWITTER				= "eTwitter";			// Twitter選択.
+	public const string FIREBASE_EVNET_START_TUTORIAL		= "eStartTutorial";		// チュートリアルスタート.
+	public const string FIREBASE_EVNET_FINISH_TUTORIAL		= "eFinishTutorial";	// チュートリアル終了.
+	// Event log for Ads.
+	public const string FIREBASE_EVENT_GACHA_ADS	 		= "eGachaAds";			// ガチャの動画広告.
+	public const string FIREBASE_EVENT_GACHA_BANNER_ADS	 	= "eGachaBannerAds";
+	public const string FIREBASE_EVENT_STAGECLEAR_BANNER_ADS= "eStageClearBannerAds";
+	public const string FIREBASE_EVENT_GAMEOVER_BANNER_ADS	= "eGameOverBannerAds";
+	public const string FIREBASE_EVENT_PAUSE_ADS			= "ePauseAds";
 
 	#if UNITY_ANDROID
 	public const string BANNER_ID = "ca-app-pub-5046886791626891/4433384200";
@@ -212,6 +272,15 @@ public class Data
 	public const string INTERSTITIAL_ID = "ca-app-pub-5046886791626891/8244784432";
 	#else
 	public const string INTERSTITIAL_ID = "ca-app-pub-5046886791626891/6085022007";
+	#endif
+
+	// ガチャやゲームオーバー時用、Gacha Ticket or Life.
+	#if UNITY_ANDROID
+	public const string INTERSTITIAL_NOMOVIE_ID = "ca-app-pub-5046886791626891/4106920801";
+	#elif UNITY_IPHONE
+	public const string INTERSTITIAL_NOMOVIE_ID = "ca-app-pub-5046886791626891/3179129747";
+	#else
+	public const string INTERSTITIAL_NOMOVIE_ID = "ca-app-pub-5046886791626891/4106920801";
 	#endif
 
 
@@ -2659,7 +2728,7 @@ public class Data
 				isCommandNoneClick = false,
 				canHoleCycle = false,
 				waitTime = 3,
-				waitText = "墓で敵を倒せます。",
+				waitText = Language.sentence [Language.GAME_TUTORIAL_1],
 			},
 			new TutorialStageData.PlayerData {
 				compass = Player.Compass.Left,
@@ -3043,7 +3112,7 @@ public class Data
 				isCommandNoneClick = false,
 				canHoleCycle = false,
 				waitTime = 3,
-				waitText = "穴に落として埋めると敵を倒せます。",
+				waitText = Language.sentence [Language.GAME_TUTORIAL_2],
 			},
 			new TutorialStageData.PlayerData {
 				compass = Player.Compass.Left,

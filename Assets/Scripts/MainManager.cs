@@ -98,8 +98,11 @@ public class MainManager : MonoBehaviour
 
 
 
-	public const int START_LIFE = 2;
+	public const int START_LIFE = 5;
+	public const int START_WEAPON = 0;
+	public const int INIT_GATHATICKET = 2;
 
+	public const int INFORMATION_NUMBER = 129;
 
 	private State state;
 	private float time;
@@ -113,8 +116,9 @@ public class MainManager : MonoBehaviour
 	public bool isExtraItemHoe		{ get; set; }
 	public bool isExtraItemStone	{ get; set; }
 	public bool isExtraItemParasol	{ get; set; }
+    public bool donePauseMovie      { get; set; }
 
-	public int life {
+    public int life {
 		get {
 			return PlayerPrefs.GetInt (Data.MY_LIFE);
 		}
@@ -124,6 +128,23 @@ public class MainManager : MonoBehaviour
 			PlayerPrefs.SetInt (Data.MY_LIFE, value);
 		}
 	}
+
+	public int weapon {
+		get {
+			return PlayerPrefs.GetInt (Data.MY_WEAPON);
+		}
+		set {
+			// For Debug.
+			//if (PlayerPrefs.HasKey (Data.MY_WEAPON)) {
+			//	PlayerPrefs.DeleteKey (Data.MY_WEAPON);
+			//	value = 15;
+			//}
+			if (value > 99)
+				value = 99;
+			PlayerPrefs.SetInt (Data.MY_WEAPON, value);
+		}
+	}
+
 	[HideInInspector]
 	public bool isLogin;
 	public LoginInformation loginInfo;
@@ -145,11 +166,16 @@ public class MainManager : MonoBehaviour
 	[HideInInspector]
 	public int selectCharacter;
 
+	// 起動時に情報を出すための番号.
+	[HideInInspector]
+	public int informationNumber;
+	[HideInInspector]
+	public bool isInterstitialClose;
+
 	private void Start ()
 	{
 		Application.targetFrameRate = Data.TARGET_FRAME_RATE;
 		Language.sentence = Application.systemLanguage == SystemLanguage.Japanese ? Language.sentenceJa : Language.sentenceEn;
-
 
 //		enabled = false;
 //		yield return StartCoroutine (RequestData ());
@@ -159,7 +185,8 @@ public class MainManager : MonoBehaviour
 		this.state = State.Title;
 		this.time = 0;
 
-		this.SetResolution (Data.SCREEN_RESOLUTION);
+		this.SetResolution ();
+		this.SetCameraFitter ();
 		this.RecordLoad ();
 		/*
 		this.nendAdBanner = GameObject.Find ("NendAdBanner").GetComponent<NendAdBanner> ();
@@ -180,10 +207,16 @@ public class MainManager : MonoBehaviour
 
 		this.InitCharacter ();
 		this.LoadCharacter ();
+		this.LoadInformation ();
 
-		// For Debug.
-		gachaTicket = 10;
-	}
+        donePauseMovie = false;
+        // For Debug.
+        //gachaTicket = 10;
+        //PlayerPrefs.DeleteKey(Data.RECORD_GACHATICKET);
+        //PlayerPrefs.SetString (Data.LOGIN_NAME, "testnow2");
+        //PlayerPrefs.DeleteKey(Data.LOGIN_NAME);
+        //PlayerPrefs.DeleteKey(Data.LOGIN_PASSWORD);
+    }
 
 
 
@@ -205,7 +238,7 @@ public class MainManager : MonoBehaviour
 
 					if (this.bannerView != null)
 						this.bannerView.Destroy ();
-					this.bannerView = new BannerView (Data.BANNER_ID, AdSize.Banner, AdPosition.Top);
+					this.bannerView = new BannerView (Data.BANNER_ID, AdSize.Banner, AdPosition.Bottom);	// メニューを全体的に上に上げたのでバナーは下へ
 					this.bannerView.LoadAd (new AdRequest.Builder ().Build ());
 					this.bannerView.Hide ();
 
@@ -326,6 +359,7 @@ public class MainManager : MonoBehaviour
 		this.score = 0;
 		if (this.life < START_LIFE)
 			this.life = START_LIFE;
+		this.weapon = START_WEAPON;
 
 		this.state = State.Game;
 		this.time = 0;
@@ -333,9 +367,10 @@ public class MainManager : MonoBehaviour
 
 
 
-	public void CurrentStage (int life)
+	public void CurrentStage (int life, int weapon)
 	{
 		this.life = life;
+		this.weapon = weapon;
 
 		this.state = State.Game;
 		this.time = 0;
@@ -343,7 +378,7 @@ public class MainManager : MonoBehaviour
 
 
 
-	public void NextStage (int life)
+	public void NextStage (int life, int weapon)
 	{
 		if (this.isTutorial) {
 			this.isTutorial = false;
@@ -352,6 +387,7 @@ public class MainManager : MonoBehaviour
 			this.stage = (stage + 1) % Data.stageDataList.Count;
 		}
 		this.life = life;
+		this.weapon = weapon;
 
 		this.state = State.Game;
 		this.time = 0;
@@ -369,11 +405,12 @@ public class MainManager : MonoBehaviour
 
 
 
-	public void SelectStage (int stage, int life)
+	public void SelectStage (int stage, int life, int weapon)
 	{
 		this.stage = stage;
 		this.score = 0;
 		this.life = life;
+		this.weapon = weapon;
 		
 		this.state = State.Game;
 		this.time = 0;
@@ -414,25 +451,40 @@ public class MainManager : MonoBehaviour
 		if (PlayerPrefs.HasKey (Data.RECORD_SCORE)) {
 			score = PlayerPrefs.GetInt (Data.RECORD_SCORE);
 		}
-		if (PlayerPrefs.HasKey (Data.RECORD_SCORE_HIGH)) {
-			scoreHigh = PlayerPrefs.GetInt (Data.RECORD_SCORE_HIGH);
+
+		if (!PlayerPrefs.HasKey (Data.RECORD_SCORE_HIGH)) {
+			PlayerPrefs.SetInt (Data.RECORD_SCORE_HIGH, 10000);
+		} else if (PlayerPrefs.GetInt (Data.RECORD_SCORE_HIGH) < 10000) {
+			PlayerPrefs.SetInt (Data.RECORD_SCORE_HIGH, 10000);
 		}
+		scoreHigh = PlayerPrefs.GetInt (Data.RECORD_SCORE_HIGH);
 	}
 
 
 
-	private void SetResolution (float resolution)
+	private void SetResolution ()
 	{
-		float screenRate = resolution / Screen.height;
-		if (screenRate > 1)
-			screenRate = 1;
-		int width = (int)(Screen.width * screenRate);
-		int height = (int)(Screen.height * screenRate);
+		float resolutionRatio = Data.ResolutionRatio;
+		if (resolutionRatio < 1) resolutionRatio = 1;
+		int width = (int)(Screen.width / resolutionRatio);
+		int height = (int)(Screen.height / resolutionRatio);
+
 		Screen.SetResolution (width, height, true, 15);
 	}
 
 
-	
+
+	private void SetCameraFitter ()
+	{
+		float orthographicSize = Data.SCREEN_HEIGHT / 2;
+		if (Data.AspectRatio > Data.DeviceAspectRatio)
+			orthographicSize = Data.AspectRatio / Data.DeviceAspectRatio * Data.SCREEN_HEIGHT / 2;
+
+		Camera.main.orthographicSize = orthographicSize;
+	}
+
+
+
 	public void ShowInterstitial (Action action)
 	{
 		if (interstitial.IsLoaded ()) {
@@ -446,6 +498,40 @@ public class MainManager : MonoBehaviour
 			interstitial.Show ();
 		}
 	}
+
+	public void ShowInterstitialNoMovie ()
+	{
+		// 広告を初期化する
+		InterstitialAd interstitial = new InterstitialAd(Data.INTERSTITIAL_NOMOVIE_ID); 
+		AdRequest.Builder builder = new AdRequest.Builder();
+		AdRequest request = builder.Build();
+
+		// 広告が表示可能になったときのコールバック
+		interstitial.OnAdLoaded += (handler, EventArgs) =>
+		{
+			// 広告を表示する
+			interstitial.Show();
+		};
+
+		// 広告が閉じられたときのコールバック
+		interstitial.OnAdClosed += (handler, EventArgs) =>
+		{
+			// 後処理
+			interstitial.Destroy();
+			isInterstitialClose = true;
+		};
+
+		// 広告がエラーになったときのコールバック
+		interstitial.OnAdFailedToLoad += (handler, EventArgs) =>
+		{
+			// エラー処理
+			interstitial.Destroy();
+		};
+
+		// インタースティシャル広告のロード
+		interstitial.LoadAd(request);
+	}
+
 
 	private void InitCharacter()
 	{
@@ -503,7 +589,13 @@ public class MainManager : MonoBehaviour
 	{
 		int record = PlayerPrefs.GetInt (Data.RECORD_CHARACTER);
 		selectCharacter = PlayerPrefs.GetInt (Data.RECORD_CHARACTER_SELECT);
-		gachaTicket = PlayerPrefs.GetInt (Data.RECORD_GACHATICKET);
+
+		// ガチャチケットが保存されていない.
+		if (!PlayerPrefs.HasKey (Data.RECORD_GACHATICKET)) {
+			gachaTicket = INIT_GATHATICKET;
+		} else {
+			gachaTicket = PlayerPrefs.GetInt (Data.RECORD_GACHATICKET);
+		}
 
 		character [0] = 1;
 		if ((record & 0x00000010) > 0)
@@ -517,6 +609,63 @@ public class MainManager : MonoBehaviour
 		if ((record & 0x00100000) > 0)
 			character [5] = 1;
 	}
+
+	public bool IsWeaponCharacter (int num)
+	{
+		switch (num) {
+		case 2:
+		case 3:
+		case 4:
+			return true;
+		}
+		return false;
+	}
+
+	public bool IsInformation()
+	{
+		return informationNumber < INFORMATION_NUMBER;
+	}
+
+	public void SaveInformation()
+	{
+		informationNumber = INFORMATION_NUMBER;
+		PlayerPrefs.SetInt (Data.INFORMATION, INFORMATION_NUMBER);
+	}
+
+	public void LoadInformation()
+	{
+		if (!PlayerPrefs.HasKey (Data.INFORMATION)) {
+			informationNumber = 0;
+			return;
+		}
+		informationNumber = PlayerPrefs.GetInt (Data.INFORMATION);
+	}
+
+
+	public int GetTicketItemPercent ()
+	{
+		return 5;
+	}
+
+
+	public void AddTicket ()
+	{
+		gachaTicket++;
+		PlayerPrefs.SetInt (Data.RECORD_GACHATICKET, gachaTicket);
+	}
+
+
+	public int GetWeaponItemPercent ()
+	{
+		return 10;
+	}
+
+
+	public void AddWeapon ()
+	{
+		weapon += 10;
+	}
+
 
 	private static IEnumerator RequestData ()
 	{
@@ -1209,5 +1358,4 @@ public class MainManager : MonoBehaviour
 //		System.Text.Encoding enc = System.Text.Encoding.GetEncoding ("utf-8");
 //		System.IO.File.WriteAllText (filePath, dataText, enc);
 	}
-
 }

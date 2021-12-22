@@ -130,9 +130,13 @@ public class ResourceManager : MonoBehaviour
 	public Dictionary<int, Sprite> spritePlayerList;
 	[HideInInspector]
 	public Sprite spriteUpperPlayer;
+	[HideInInspector]
+	public Sprite spritePlayerWeapon;
 
 	[HideInInspector]
 	public Dictionary<int, Sprite> spriteEnemyList;
+	[HideInInspector]
+	public Sprite spriteEnemyWeapon;
 	[SerializeField]
 	public Sprite spriteWeapon;
 
@@ -146,6 +150,8 @@ public class ResourceManager : MonoBehaviour
 	private Sprite spriteItemAmulet;
 	[SerializeField]
 	private Sprite spriteItemParasol;
+	[SerializeField]
+	private Sprite spriteItemTicket;
 	[HideInInspector]
 	public Dictionary<int, Sprite> spriteItemList;
 	
@@ -301,6 +307,7 @@ public class ResourceManager : MonoBehaviour
 			{(int)Item.Type.Stone		* SPRITE_MULTI_TYPE,			spriteItemStone		},
 			{(int)Item.Type.Amulet		* SPRITE_MULTI_TYPE,			spriteItemAmulet	},
 			{(int)Item.Type.Parasol		* SPRITE_MULTI_TYPE,			spriteItemParasol	},
+			{(int)Item.Type.Ticket		* SPRITE_MULTI_TYPE,			spriteItemTicket	},
 		};
 	}
 		
@@ -368,6 +375,7 @@ public class ResourceManager : MonoBehaviour
 		};
 
 		spriteUpperPlayer = Resources.Load<Sprite> (string.Format ("Textures/upper_player{0}",	charaId));
+		spritePlayerWeapon = Resources.Load<Sprite> (string.Format ("Textures/player{0}_weapon", charaId));
 	}
 
 
@@ -389,6 +397,16 @@ public class ResourceManager : MonoBehaviour
 		spriteEnemyList.Add ((int)enemyType * SPRITE_MULTI_TYPE + (int)Enemy.Compass.Bottom		* SPRITE_MULTI_COMPASS + Enemy.IMAGE_0, Resources.Load<Sprite> (string.Format ("Textures/enemy_{0}_bottom_0",	enemyType.ToString ().ToLower ())));
 		spriteEnemyList.Add ((int)enemyType * SPRITE_MULTI_TYPE + (int)Enemy.Compass.Bottom		* SPRITE_MULTI_COMPASS + Enemy.IMAGE_1, Resources.Load<Sprite> (string.Format ("Textures/enemy_{0}_bottom_1",	enemyType.ToString ().ToLower ())));
 		spriteEnemyList.Add ((int)enemyType * SPRITE_MULTI_TYPE + (int)Enemy.Compass.Bottom		* SPRITE_MULTI_COMPASS + Enemy.IMAGE_2, Resources.Load<Sprite> (string.Format ("Textures/enemy_{0}_bottom_2",	enemyType.ToString ().ToLower ())));
+
+		if (enemyType == Enemy.Type.Tengu)
+			spriteEnemyWeapon = Resources.Load<Sprite> ("Textures/enemy_weapon");
+	}
+
+
+
+	public Sprite GetContinuePlayerSprite (int charaId)
+	{
+		return Resources.Load<Sprite> (string.Format ("Textures/continue_player{0}", charaId));
 	}
 	
 }

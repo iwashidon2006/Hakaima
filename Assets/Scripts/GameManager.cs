@@ -450,16 +450,24 @@ public class GameManager : MonoBehaviour
 		public GameObject goDescription;
 		public GameObject goClear;
 		public GameObject goEncourage;
+		public GameObject goButtonHowTo;
 		public GameObject goButtonBack;
 		public GameObject goButtonMovie;
 		public GameObject goButtonEnd;
 		public GameObject goVolumeOn;
 		public GameObject goVolumeOff;
-	}
+		public GameObject goHowTo;
+		public GameObject goHowToImageJp;
+		public GameObject goHowToImageEn;
+		public GameObject goHowToButtonClose;
+        public GameObject goCaution;
+        public GameObject goCautionButtonYes;
+        public GameObject goCautionButtonNo;
+    }
 
 
 
-	private class CollectClear
+    private class CollectClear
 	{
 		public GameObject go;
 		public GameObject goTitle;
@@ -500,6 +508,7 @@ public class GameManager : MonoBehaviour
 		public GameObject goStage;
 		public GameObject goScore;
 		public GameObject goDescription;
+		public GameObject goPlayer;
 		public GameObject goButtonContinue;
 		public GameObject goButtonMovie;
 		public GameObject goButtonEnd;
@@ -548,6 +557,9 @@ public class GameManager : MonoBehaviour
 	private List<GroupNumber> groupNumberList;
 
 	private bool isPause;
+	private bool isHowto;
+    private bool isCaution;
+    private Vector3 pauseHowToPosition;
 	private Score score;
 	private Life life;
 	private MyWeapon myWeapon;
@@ -729,13 +741,21 @@ public class GameManager : MonoBehaviour
 		collectPause.goDescription		= collectPause.go.transform.Find ("Description").gameObject;
 		collectPause.goClear			= collectPause.go.transform.Find ("Clear").gameObject;
 		collectPause.goEncourage		= collectPause.go.transform.Find ("Encourage").gameObject;
+		collectPause.goButtonHowTo		= collectPause.go.transform.Find ("ButtonHowTo").gameObject;
 		collectPause.goButtonBack		= collectPause.go.transform.Find ("ButtonBack").gameObject;
 		collectPause.goButtonMovie		= collectPause.go.transform.Find ("ButtonMovie").gameObject;
 		collectPause.goButtonEnd		= collectPause.go.transform.Find ("ButtonEnd").gameObject;
 		collectPause.goVolumeOn			= collectPause.go.transform.Find ("Volume/On").gameObject;
 		collectPause.goVolumeOff		= collectPause.go.transform.Find ("Volume/Off").gameObject;
+		collectPause.goHowTo			= collectPause.go.transform.Find ("HowTo").gameObject;
+		collectPause.goHowToImageJp		= collectPause.go.transform.Find ("HowTo/Help_jp").gameObject;
+		collectPause.goHowToImageEn		= collectPause.go.transform.Find ("HowTo/Help_en").gameObject;
+		collectPause.goHowToButtonClose	= collectPause.go.transform.Find ("HowTo/ButtonBack").gameObject;
+        collectPause.goCaution          = collectPause.go.transform.Find("Caution").gameObject;
+        collectPause.goCautionButtonYes = collectPause.go.transform.Find("Caution/ButtonYes").gameObject;
+        collectPause.goCautionButtonNo  = collectPause.go.transform.Find("Caution/ButtonNo").gameObject;
 
-		collectClear					= new CollectClear ();
+        collectClear = new CollectClear ();
 		collectClear.go					= transform.Find ("UI/Logo/Clear").gameObject;
 		collectClear.goTitle			= collectClear.go.transform.Find ("Title").gameObject;
 		collectClear.goEnemy			= collectClear.go.transform.Find ("Enemy").gameObject;
@@ -764,6 +784,7 @@ public class GameManager : MonoBehaviour
 		collectContinue.goStage				= collectContinue.go.transform.Find ("Stage(Value)").gameObject;
 		collectContinue.goScore				= collectContinue.go.transform.Find ("Score(Value)").gameObject;
 		collectContinue.goDescription		= collectContinue.go.transform.Find ("Description").gameObject;
+		collectContinue.goPlayer			= collectContinue.go.transform.Find ("Player").gameObject;
 		collectContinue.goButtonContinue	= collectContinue.go.transform.Find ("ButtonContinue").gameObject;
 		collectContinue.goButtonMovie		= collectContinue.go.transform.Find ("ButtonMovie").gameObject;
 		collectContinue.goButtonEnd			= collectContinue.go.transform.Find ("ButtonEnd").gameObject;
@@ -831,21 +852,26 @@ public class GameManager : MonoBehaviour
 		goOwnerItemList [2].GetComponent<Button> ().onClick.AddListener (() => OnItem (ownerItemList [2]));
 		goOwnerItemList [3].GetComponent<Button> ().onClick.AddListener (() => OnItem (ownerItemList [3]));
 
+		collectPause.goButtonHowTo			.GetComponent<Button> ().onClick.AddListener (() => OnHowTo (true));
 		collectPause.goButtonBack			.GetComponent<Button> ().onClick.AddListener (() => OnPause (false));
 		collectPause.goButtonMovie			.GetComponent<Button> ().onClick.AddListener (() => OnPauseMovie ());
 		collectPause.goButtonEnd			.GetComponent<Button> ().onClick.AddListener (() => OnPauseEnd ());
 		collectPause.goVolumeOn				.GetComponent<Button> ().onClick.AddListener (() => OnVolume (true));
 		collectPause.goVolumeOff			.GetComponent<Button> ().onClick.AddListener (() => OnVolume (false));
+		collectPause.goHowToButtonClose		.GetComponent<Button> ().onClick.AddListener (() => OnHowTo (false));
 		collectContinue.goButtonContinue	.GetComponent<Button> ().onClick.AddListener (() => OnContinue (CONTINUE_COMMAND_YES));
 		collectContinue.goButtonMovie		.GetComponent<Button> ().onClick.AddListener (() => OnContinueMovie ());
 		collectContinue.goButtonEnd			.GetComponent<Button> ().onClick.AddListener (() => OnContinue (CONTINUE_COMMAND_NO));
+        collectPause.goCautionButtonYes     .GetComponent<Button> ().onClick.AddListener (() => OnCaution(true));
+        collectPause.goCautionButtonNo      .GetComponent<Button> ().onClick.AddListener (() => OnCaution(false));
 
+        pauseHowToPosition = collectPause.goButtonHowTo.transform.position;
 
-		OnVolume (SoundManager.Instance.GetMute ());
+        OnVolume(SoundManager.Instance.GetMute ());
 
+        ShowPauseMovie();
 
-
-		goDebug = transform.Find ("UI/Debug").gameObject;
+        goDebug = transform.Find ("UI/Debug").gameObject;
 		goDebug.transform.Find ("Damage").GetComponent<Button> ().onClick.AddListener (() => OnDebugDamageClick ());
 		goDebug.transform.Find ("PreStage").GetComponent<Button> ().onClick.AddListener (() => {
 			keepCellList = null;
@@ -2219,6 +2245,7 @@ public class GameManager : MonoBehaviour
 									state = State.Continue;
 									time = 0;
 									loop = true;
+									MainManager.Instance.ShowInterstitialNoMovie();
 								} else {
 									life.now--;
 									player.Rise ();
@@ -2269,9 +2296,15 @@ public class GameManager : MonoBehaviour
 						{
 							int pointX = Mathf.FloorToInt ((weapon.positionX + weapon.size / 2) / weapon.size);
 							int pointY = Mathf.FloorToInt ((weapon.positionY + weapon.size / 2) / weapon.size);
-							Chip chip = chipList [pointX + pointY * Data.LENGTH_X];
-							if (chip.obstacleList.Exists (obj => !Data.GetObstacleData (obj.type).isThrough))
+							// 画面外になったら即終了 2018.9.19 iwasaki.
+							if (chipList.Count <= (pointX + pointY * Data.LENGTH_X) || (pointX + pointY * Data.LENGTH_X) < 0) {
 								isEnd = true;
+							}
+							else {
+								Chip chip = chipList [pointX + pointY * Data.LENGTH_X];
+								if (chip.obstacleList.Exists (obj => !Data.GetObstacleData (obj.type).isThrough))
+									isEnd = true;
+							}
 						}
 						if (isEnd) {
 							Destroy (groupEnemyWeaponList [i].gameObject);
@@ -2604,6 +2637,7 @@ public class GameManager : MonoBehaviour
 						collectContinue.go.SetActive (true);
 						collectContinue.goStage.GetComponent<Text> ().text = string.Format ("{0}", MainManager.Instance.stage + 1);
 						collectContinue.goScore.GetComponent<Text> ().text = score.now.ToString ();
+						collectContinue.goPlayer.GetComponent<Image> ().sprite = ResourceManager.Instance.GetContinuePlayerSprite (MainManager.Instance.selectCharacter);
 						continueCommand = CONTINUE_COMMAND_NONE;
 						SoundManager.Instance.StopBgm ();
 						SoundManager.Instance.PlaySe (SoundManager.SeName.JINGLE_GAMEOVER);
@@ -2625,8 +2659,9 @@ public class GameManager : MonoBehaviour
 							time = 0;
 							pattern = 0;
 							loop = true;
-
-							player.Rise ();
+                            MainManager.Instance.donePauseMovie = false;
+                            ShowPauseMovie();
+                            player.Rise ();
 							player.SetBlind (true, Color.white);
 							groupPlayer.invincibleTime = 5f;
 							remainingTime.now = Data.GetStageData (MainManager.Instance.stage).limitTime;
@@ -2636,12 +2671,18 @@ public class GameManager : MonoBehaviour
 						break;
 					case CONTINUE_COMMAND_YES:
 						{
+							// コンティニュー時のライフを指定の数に（３）
+							life.now = Data.CONTINUE_LIFE;
 							MainManager.Instance.CurrentStage (life.now, 0);
+                            MainManager.Instance.donePauseMovie = false;
+                            ShowPauseMovie();
 						}
 						break;
 					case CONTINUE_COMMAND_NO:
 						{
 							MainManager.Instance.Title ();
+                            MainManager.Instance.donePauseMovie = false;
+                            ShowPauseMovie();
 						}
 						break;
 					}
@@ -3261,20 +3302,36 @@ public class GameManager : MonoBehaviour
 	}
 
 
+    private void ShowPauseMovie()
+    {
+        collectPause.goButtonMovie.SetActive(!MainManager.Instance.donePauseMovie);
+        if (MainManager.Instance.donePauseMovie)
+        {
+            collectPause.goButtonHowTo.transform.position = collectPause.goButtonMovie.transform.position;
+        }
+        else
+        {
+            collectPause.goButtonHowTo.transform.position = pauseHowToPosition;
+        }
+    }
+
 
 	private void OnPause (bool isPause)
 	{
 		if (state == State.Play) {
 			this.isPause = isPause;
-			collectPause.go.SetActive (isPause);
+			isHowto = false;
+            isCaution = false;
+            collectPause.go.SetActive (isPause);
+			collectPause.goHowTo.SetActive (isHowto);
 			if (this.isPause) {
 				//MainManager.Instance.nendAdBanner.Show ();
-				MainManager.Instance.bannerView.Show ();
+				//MainManager.Instance.bannerView.Show ();
 				SoundManager.Instance.PlaySe (SoundManager.SeName.SE_OK);
 				FirebaseAnalyticsManager.Instance.LogEvent (Data.FIREBASE_SCREEN_PUASE);
 			} else {
 				//MainManager.Instance.nendAdBanner.Hide ();
-				MainManager.Instance.bannerView.Hide ();
+				//MainManager.Instance.bannerView.Hide ();
 				SoundManager.Instance.PlaySe (SoundManager.SeName.SE_CANCEL);
 			}
 		}
@@ -3284,16 +3341,57 @@ public class GameManager : MonoBehaviour
 	
 	private void OnPauseMovie ()
 	{
-		MainManager.Instance.ShowInterstitial (() => {
-			life.now += 5;
+        MainManager.Instance.ShowInterstitial (() => {
+            MainManager.Instance.donePauseMovie = true;
+            ShowPauseMovie();
+            life.now += 5;
 			FirebaseAnalyticsManager.Instance.LogEvent (Data.FIREBASE_EVENT_PAUSE_ADS);
 		});
 	}
 
 
-
-	private void OnPauseEnd ()
+	private void OnHowTo(bool isHowto)
 	{
+		this.isHowto = isHowto;
+		collectPause.goHowToImageJp.SetActive (Application.systemLanguage == SystemLanguage.Japanese);
+		collectPause.goHowToImageEn.SetActive (Application.systemLanguage != SystemLanguage.Japanese);
+
+		collectPause.goHowTo.SetActive (this.isHowto);
+		if (this.isHowto) {
+			SoundManager.Instance.PlaySe (SoundManager.SeName.SE_OK);
+		} else {
+			SoundManager.Instance.PlaySe (SoundManager.SeName.SE_CANCEL);
+		}
+	}
+
+
+    private void OnCaution(bool isCaution)
+    {
+        this.isCaution = isCaution;
+        collectPause.goCaution.SetActive(false);
+        if (this.isCaution)
+        {
+            SoundManager.Instance.PlaySe(SoundManager.SeName.SE_OK);
+            // 武器半分(2以上保持時).
+            if (myWeapon.now > 1)
+                myWeapon.now /= 2;
+            SoundManager.Instance.StopSe();
+            SoundManager.Instance.PlaySe(SoundManager.SeName.SE_CANCEL);
+            //MainManager.Instance.nendAdBanner.Hide ();
+            MainManager.Instance.bannerView.Hide();
+            MainManager.Instance.Title();
+        }
+        else
+        {
+            SoundManager.Instance.PlaySe(SoundManager.SeName.SE_CANCEL);
+        }
+    }
+
+
+
+    private void OnPauseEnd ()
+	{
+        /*
 		if (state == State.Play) {
 			// 武器半分(2以上保持時).
 			if (myWeapon.now > 1)
@@ -3304,7 +3402,11 @@ public class GameManager : MonoBehaviour
 			MainManager.Instance.bannerView.Hide ();
 			MainManager.Instance.Title ();
 		}
-	}
+        */
+        SoundManager.Instance.PlaySe(SoundManager.SeName.SE_OK);
+        collectPause.goCaution.SetActive(true);
+		isCaution = true;
+    }
 
 
 
@@ -4311,7 +4413,25 @@ public class GameManager : MonoBehaviour
 	private void CheckBackKey ()
 	{
 		if (Input.GetKeyDown (KeyCode.Escape)) {
+			if (isHowto) {
+				OnHowTo (false);
+				return;
+			}
+			if (isCaution) {
+				OnCaution (false);
+				return;
+			}
+
 			OnPause (!isPause);
+		}
+	}
+
+
+
+	private void OnApplicationPause (bool pauseStatus)
+	{
+		if (!isPause) {
+			OnPause (true);
 		}
 	}
 
