@@ -14,12 +14,12 @@ public class FirebaseAnalyticsManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		
+
 	}
-	
+
 	// Update is called once per frame
 	void Update () {
-		
+
 	}
 
 	public void LogEvent(string log)
@@ -28,9 +28,9 @@ public class FirebaseAnalyticsManager : MonoBehaviour {
 
 		if (Application.internetReachability == NetworkReachability.NotReachable)
 			return;
-		
+
 		#if !UNITY_EDITOR
-		Firebase.Analytics.FirebaseAnalytics.LogEvent(log);
+		//Firebase.Analytics.FirebaseAnalytics.LogEvent(log);
 		#endif
 	}
 
@@ -42,7 +42,7 @@ public class FirebaseAnalyticsManager : MonoBehaviour {
 			return;
 
 		#if !UNITY_EDITOR
-		Firebase.Analytics.FirebaseAnalytics.LogEvent(log);
+		//Firebase.Analytics.FirebaseAnalytics.LogEvent(log);
 		#endif
 	}
 
