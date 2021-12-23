@@ -30,7 +30,7 @@ public class FirebaseAnalyticsManager : MonoBehaviour {
 			return;
 		
 		#if !UNITY_EDITOR
-		Firebase.Analytics.FirebaseAnalytics.LogEvent(log);
+		//Firebase.Analytics.FirebaseAnalytics.LogEvent(log);
 		#endif
 	}
 
@@ -42,7 +42,7 @@ public class FirebaseAnalyticsManager : MonoBehaviour {
 			return;
 
 		#if !UNITY_EDITOR
-		Firebase.Analytics.FirebaseAnalytics.LogEvent(log);
+		//Firebase.Analytics.FirebaseAnalytics.LogEvent(log);
 		#endif
 	}
 
